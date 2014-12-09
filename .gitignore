@@ -1,0 +1,11 @@
+CMakeLists.txt.user*
+bin/
+build/
+.kdev4/
+noble.kdev4
+.DS_Store
+*.dmg
+panga.app/Contents/MacOS/panga
+*~
+*.kate-swp
+.directory

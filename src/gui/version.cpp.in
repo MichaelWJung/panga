@@ -1,0 +1,2 @@
+#define GIT_VERSION "@GIT_VERSION@"
+const char* VERSION_STRING = GIT_VERSION;

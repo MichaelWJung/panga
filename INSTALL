@@ -1,0 +1,228 @@
+Complete build instructions for PANGA including all libraries.
+
+#################
+WINDOWS 32/64 BIT
+#################
+
+
+1. SETTING UP THE BUILD ENVIRONMENT
+-----------------------------------
+
+MINGW:
+
+Download the Mingw-builds installer from the MinGW-w64 project page:
+http://mingw-w64.sourceforge.net/download.php#mingw-builds
+
+Install MinGW using the following options:
+Version 4.7.3
+Architecture x32 (for 32 bit binaries) or x64 (for 64 bit binaries)
+Threads posix
+Exception sjlj
+Build revision 1
+
+Install to a subfolder named mingw of your build folder.
+
+Afterwards, delete the following files from the MinGW folder to force static linking of the pthread library from the folder mingw32/i686-w64-mingw32/lib or mingw64/x86_64-w64-mingw32/lib:
+libwinpthread-1.dll
+libwinpthread.dll.a
+libpthread.dll.a
+
+
+CMAKE:
+
+Download and install CMake from
+http://www.cmake.org/cmake/resources/software.html
+
+
+2. BUILDING QT
+--------------
+
+Download the source code of Qt version 5.1.1 from
+http://download.qt-project.org/official_releases/qt/5.1/5.1.1/single/qt-everywhere-opensource-src-5.1.1.zip
+
+Extract the archive into your build folder (which creates a subfolder named qt-everywhere-opensource-src-5.1.1).
+
+In order to avoid library dependencies with libstdc++-6.dll and libgcc_s_sjlj-1.dll, change the flags in qtbase\mkspecs\win32-g++\qmake.conf on line 69 from
+ QMAKE_LFLAGS =
+to
+ QMAKE_LFLAGS = -static-libgcc -static-libstdc++
+
+Open the mingw terminal from the start menu and cd to the Qt folder. Run
+configure -opensource -confirm-license -platform win32-g++ -release -nomake examples -nomake tools -qt-style-windowsxp -qt-style-windowsvista -c++11 -opengl desktop
+Then run "mingw32-make -j8" (replace 8 by the number of CPU cores to use for the build process)
+
+
+3. BUILDING QWT
+---------------
+
+Checkout the latest Qwt source code from the svn repository with (you need to download and install a subversion client):
+svn checkout svn://svn.code.sf.net/p/qwt/code/branches/qwt-6.1
+
+Or, if available, download a newer version of Qwt from
+http://sourceforge.net/projects/qwt/files/
+and extract it into your build folder. Version Qwt 6.1.0 is too old and contains a bug. The newer version should be version 6.1.x as any higher version (like 6.2.y) might be incompatible.
+
+Edit qwtbuild.pri and change line 30 from
+    CONFIG           += debug_and_release
+to
+    CONFIG           += release
+and comment out (put a # in front) the following line (CONFIG           += build_all)
+
+Edit qwtconfig.pri and comment out line the following lines:
+line 100 (QWT_CONFIG     += QwtOpenGL)
+line 119 (QWT_CONFIG     += QwtDesigner)
+
+Open the mingw terminal again and cd to the qwt folder. Now run:
+
+..\qt-everywhere-opensource-src-5.1.1\qtbase\bin\qmake.exe qwt.pro
+mingw32-make -j8
+
+
+4. BUILDING BOOST
+-----------------
+
+Download the source code of boost version 1.54.0 from
+http://sourceforge.net/projects/boost/files/boost/1.54.0/
+
+Extract the archive into your build folder (which creates a subfolder named boost_1_54_0).
+
+Open the mingw terminal again and cd to the boost folder, then cd to tools\build\v2
+Run "bootstrap.bat mingw"
+Run "b2 --prefix=..\..\..\.."
+
+Download the source code of zlib version 1.2.8 (NOT the dll version) from
+http://sourceforge.net/projects/libpng/files/zlib/1.2.8/
+
+Extract the archive into your build folder (which creates a subfolder named zlib-1.2.8).
+
+cd to the main boost folder in the mingw terminal and run (with the correct path to zlib):
+..\bin\b2.exe -j8 --build-dir=build toolset=gcc -s NO_ZLIB=0 -s ZLIB_SOURCE="PATH TO THE ZLIB FOLDER" stage
+
+
+5. BUILDING PANGA
+-----------------
+
+Put the source code of PANGA into a subfolder of your build directory named panga.
+Create a subfolder of panga named build.
+
+Run cmake-gui from a mingw terminal (e.g.: "C:\Program Files (x86)\CMake 2.8\bin\cmake-gui.exe").
+Click "Browse Source" and select the panga folder.
+Click "Browse Build" and select the panga/build folder.
+Click "Configure"
+Select the generator "MinGW Makefiles" and "Use default native compilers".
+Errors will appear.
+Check the Grouped and Advanced checkboxes.
+Now set “Boost_INCLUDE_DIR” in the “Boost” group to the include directory in your boost build.
+Select “Add Entry” and add a cache entry named “CMAKE_PREFIX_PATH” of type “PATH” and point it to the the Qt subfolder “qtbase/lib/cmake”.
+Set “QWT_INCLUDE_DIR” in the “QWT” group to the Qwt subfolder “src”.
+Set “QWT_LIBRARY” in the “QWT” group to “lib/qwt.dll” in the Qwt folder.
+Now press “Configure” again. No errors should appear, the last line should read “Configuring done”.
+Now press “Generate” (ignore upcoming warnings) and close cmake.
+
+In the mingw terminal cd to the panga/build directory and run mingw32-make -j8 package
+If everything worked well a zip package and/or an installer for Panga can be found in the build folder.
+
+
+
+########
+MAC OS X
+########
+
+The following instructions were tested on OSX 10.8 and might also work on 10.7. They will not work on 10.6 or lower.
+
+
+1. SETTING UP THE BUILD ENVIRONMENT
+-----------------------------------
+
+XCODE:
+
+Download XCode (tested with version 4.6.2) and the Command Line Tools for XCode (tested with version April 2013) from developer.apple.com/downloads and install them.
+
+
+CMAKE:
+
+Download and install CMake from
+http://www.cmake.org/cmake/resources/software.html
+
+2. INSTALLING QT
+----------------
+
+Download and install Qt 5.1.1 from http://download.qt-project.org/official_releases/qt/5.1/5.1.1/qt-mac-opensource-5.1.1-clang-offline.dmg
+
+
+3. BUILDING QWT
+---------------
+
+Checkout the latest Qwt source code from the svn repository with:
+svn checkout svn://svn.code.sf.net/p/qwt/code/branches/qwt-6.1
+
+Or, if available, download a newer version of Qwt from
+http://sourceforge.net/projects/qwt/files/
+and extract it into your build folder. Version Qwt 6.1.0 is too old and contains a bug. The newer version should be version 6.1.x as any higher version (like 6.2.y) might be incompatible.
+
+Edit qwtconfig.pri and comment out the following lines:
+QWT_CONFIG      += QwtOpenGL
+QWT_CONFIG      += QwtDesigner
+
+Run from a terminal in the qwt directory (adjust path to match your Qt directory):
+../Qt5.1.1/5.1.1/clang_64/bin/qmake qwt.pro
+make -j6
+
+The qwt framework should now be available in the lib subfolder.
+
+Run from a terminal in the qwt folder (adjust path to match your Qwt directory):
+install_name_tool -id /Users/johngalt/projects/qwt-6.1/lib/qwt.framework/Versions/6/qwt lib/qwt.framework/qwt
+
+
+4. BUILDING BOOST
+-----------------
+
+Download the source code of boost version 1.54.0 from http://sourceforge.net/projects/boost/files/boost/1.54.0/ and extract the archive.
+
+Run from a terminal in the boost directory:
+./bootstrap.sh --prefix=../boost-build --with-libraries=iostreams,thread,system,chrono,serialization --with-toolset=clang
+./b2 -j6 link=static toolset=clang cxxflags="-std=c++11 -stdlib=libc++" linkflags="-stdlib=libc++" install
+
+The boost libraries should now be available in the boost-build/lib directory.
+
+
+5. BUILDING PANGA
+-----------------
+
+Create a folder “build” in the panga directory. In this folder run from a terminal:
+cmake-gui ..
+
+In CMake press “Configure”. Select generator “Unix Makefiles” and “Use default native compilers”.
+Errors will appear. Check the “Grouped” and “Advanced” checkboxes.
+Now set “Boost_INCLUDE_DIR” in the “Boost” group to the include directory in your boost build.
+Select “Add Entry” and add a cache entry named “CMAKE_PREFIX_PATH” of type “PATH” and point it to the the Qt subfolder “5.1.1/clang_64/lib/cmake”.
+Set “QWT_INCLUDE_DIR” in the “QWT” group to the Qwt subfolder “lib/qwt.framework/Headers”.
+Set “QWT_LIBRARY” in the “QWT” group to “lib/qwt.framework/qwt” in the Qwt folder.
+Now press “Configure” again. No errors should appear, the last line should read “Configuring done”.
+Now press “Generate” and close cmake.
+Run “make -j6 package”.
+If everything works well, a dmg image containing panga.app should be available in the build folder.
+
+
+#####
+Linux
+#####
+
+4. BUILDING BOOST
+-----------------
+
+version 1.55.0
+./bootstrap.sh --prefix=../boost-build --with-libraries=iostreams,thread,system,chrono,serialization,test
+./b2 threading=multi link=static install
+
+
+5. BUILDING PANGA
+-----------------
+
+Create a folder “build” in the panga directory. In this folder run from a terminal:
+cmake-gui ..
+
+In CMake press “Configure”. Select generator “Unix Makefiles” and “Use default native compilers”.
+Errors will appear. Check the “Grouped” and “Advanced” checkboxes.
+Select “Add Entry” and add a cache entry named “Boost_NO_SYSTEM_PATHS” of type bool and enable it.
+Select “Add Entry” and add a cache entry named “BOOST_ROOT” of type path and set it to the boost-build directory.

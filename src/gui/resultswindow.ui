@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright © 2014 Michael Jung
+
+This file is part of Panga.
+
+Panga is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Panga is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Panga.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<ui version="4.0">
+ <class>ResultsWindow</class>
+ <widget class="QMainWindow" name="ResultsWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1250</width>
+    <height>900</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Results</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <item>
+     <widget class="QTabWidget" name="tab_widget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="results_tab">
+       <attribute name="title">
+        <string>&amp;Results</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="ResultsView" name="results_view">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>2</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::ExtendedSelection</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="results_label_recommending_monte_carlos">
+          <property name="text">
+           <string>Samples with yellow background exhibit parameter values outside of the normal range. Their results can probably be improved using Monte Carlo simulations.</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="monte_carlo_plots_tab">
+       <attribute name="title">
+        <string>&amp;Monte Carlo Plots</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="MonteCarloResultsView" name="monte_carlo_plots_view">
+          <property name="verticalScrollMode">
+           <enum>QAbstractItemView::ScrollPerPixel</enum>
+          </property>
+          <property name="horizontalScrollMode">
+           <enum>QAbstractItemView::ScrollPerPixel</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="bin_number_layout">
+          <item>
+           <widget class="QLabel" name="bin_number_label">
+            <property name="text">
+             <string>&amp;Number of bins:</string>
+            </property>
+            <property name="buddy">
+             <cstring>bin_number_spin_box</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="bin_number_spin_box"/>
+          </item>
+          <item>
+           <widget class="LogarithmicSlider" name="bin_number_slider">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="monte_carlo_summary_tab">
+       <attribute name="title">
+        <string>Monte Carlo &amp;Summary</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <widget class="ResultsView" name="monte_carlo_summary_view"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="fit_setup_tab">
+       <attribute name="title">
+        <string>&amp;Fit Setup</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="FitSetupWidget" name="fit_setup_widget" native="true"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1250</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_Preferences">
+    <property name="title">
+     <string>&amp;Preferences</string>
+    </property>
+    <addaction name="action_choose_monte_carlo_plots"/>
+   </widget>
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="action_save"/>
+    <addaction name="action_save_as"/>
+    <addaction name="action_export_monte_carlo_data"/>
+   </widget>
+   <addaction name="menu_File"/>
+   <addaction name="menu_Preferences"/>
+  </widget>
+  <action name="action_choose_monte_carlo_plots">
+   <property name="text">
+    <string>&amp;Choose Monte Carlo Plots...</string>
+   </property>
+  </action>
+  <action name="action_export_monte_carlo_data">
+   <property name="text">
+    <string>&amp;Export Monte Carlo Data...</string>
+   </property>
+  </action>
+  <action name="action_save_as">
+   <property name="icon">
+    <iconset theme="document-save-as">
+     <normaloff/>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Save &amp;as...</string>
+   </property>
+  </action>
+  <action name="action_show_fit_setup">
+   <property name="text">
+    <string>Show &amp;Fit Setup...</string>
+   </property>
+  </action>
+  <action name="action_save">
+   <property name="icon">
+    <iconset theme="document-save">
+     <normaloff/>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Save</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>FitSetupWidget</class>
+   <extends>QWidget</extends>
+   <header>fitsetupwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>LogarithmicSlider</class>
+   <extends>QSlider</extends>
+   <header>logarithmicslider.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ResultsView</class>
+   <extends>QTableView</extends>
+   <header>resultsview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MonteCarloResultsView</class>
+   <extends>QTableView</extends>
+   <header>montecarloresultsview.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

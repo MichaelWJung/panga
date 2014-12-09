@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright © 2014 Michael Jung
+
+This file is part of Panga.
+
+Panga is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Panga is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Panga.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<ui version="4.0">
+ <class>FitSetupWidget</class>
+ <widget class="QWidget" name="FitSetupWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>981</width>
+    <height>742</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="QScrollArea" name="scroll_area">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scroll_area_vertical_layout">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>239</width>
+        <height>728</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <layout class="QFormLayout" name="form_layout">
+         <property name="fieldGrowthPolicy">
+          <enum>QFormLayout::ExpandingFieldsGrow</enum>
+         </property>
+         <item row="1" column="0">
+          <widget class="QLabel" name="noble_gases_label">
+           <property name="text">
+            <string>Gases to use:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QGroupBox" name="noble_gases_group_box">
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <item>
+             <widget class="QCheckBox" name="he_check_box">
+              <property name="text">
+               <string>&amp;He</string>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="ne_check_box">
+              <property name="text">
+               <string>&amp;Ne</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="ar_check_box">
+              <property name="text">
+               <string>&amp;Ar</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="kr_check_box">
+              <property name="text">
+               <string>&amp;Kr</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="xe_check_box">
+              <property name="text">
+               <string>&amp;Xe</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="model_label">
+           <property name="text">
+            <string>Mo&amp;del:</string>
+           </property>
+           <property name="buddy">
+            <cstring>model_combo_box</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QComboBox" name="model_combo_box">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="parameters_to_fit_label">
+           <property name="text">
+            <string>Parameters to fit:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QGroupBox" name="parameters_group_box">
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_3"/>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="initials_label">
+           <property name="text">
+            <string>Parameter initials:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QGroupBox" name="initials_group_box">
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QGridLayout" name="gridLayout"/>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="values_label">
+           <property name="text">
+            <string>Parameter values:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QGroupBox" name="values_group_box">
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_2"/>
+          </widget>
+         </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="n_monte_carlos_label">
+           <property name="text">
+            <string>Monte &amp;Carlos:</string>
+           </property>
+           <property name="buddy">
+            <cstring>n_monte_carlos_spin_box</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <widget class="QSpinBox" name="n_monte_carlos_spin_box">
+           <property name="maximum">
+            <number>99999999</number>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="name_lineedit"/>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="name_label">
+           <property name="text">
+            <string>&amp;Name:</string>
+           </property>
+           <property name="buddy">
+            <cstring>name_lineedit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QCheckBox" name="constrained_fit_checkbox">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="constrained_fit_label">
+           <property name="text">
+            <string>Constrained Fit:</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QSplitter" name="splitter">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>1</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <widget class="QWidget" name="layoutWidget">
+      <layout class="QVBoxLayout" name="concentrations_layout">
+       <item>
+        <widget class="QLabel" name="concentrations_label">
+         <property name="text">
+          <string>C&amp;oncentrations:</string>
+         </property>
+         <property name="buddy">
+          <cstring>concentrations_view</cstring>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="ConcentrationsView" name="concentrations_view">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+           <horstretch>1</horstretch>
+           <verstretch>1</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::ContiguousSelection</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="layoutWidget_2">
+      <layout class="QVBoxLayout" name="parameter_setup_layout">
+       <item>
+        <widget class="QLabel" name="parameter_setup_label">
+         <property name="text">
+          <string>&amp;Individually set parameter values and initials:</string>
+         </property>
+         <property name="buddy">
+          <cstring>parameter_setup_view</cstring>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="ParameterSetupView" name="parameter_setup_view">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+           <horstretch>1</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::ContiguousSelection</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ParameterSetupView</class>
+   <extends>QTableView</extends>
+   <header>parametersetupview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ConcentrationsView</class>
+   <extends>QTableView</extends>
+   <header>concentrationsview.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>he_check_box</tabstop>
+  <tabstop>ne_check_box</tabstop>
+  <tabstop>ar_check_box</tabstop>
+  <tabstop>kr_check_box</tabstop>
+  <tabstop>xe_check_box</tabstop>
+  <tabstop>model_combo_box</tabstop>
+  <tabstop>n_monte_carlos_spin_box</tabstop>
+  <tabstop>concentrations_view</tabstop>
+  <tabstop>parameter_setup_view</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
