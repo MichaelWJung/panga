@@ -68,8 +68,8 @@ QStringList MonteCarloResultsModel::GetAxisTitlesVisitor::operator()(
         const ColumnType2D& type) const
 {
     QStringList titles;
-    titles += model_.GetColumnName(type.first);
     titles += model_.GetColumnName(type.second);
+    titles += model_.GetColumnName(type.first);
     return titles;
 }
 
@@ -364,8 +364,8 @@ const QList<ColumnTypeVariant> MonteCarloResultsModel::PrepareColumnTypes(
     {
         auto indices = GetCovarianceMatrixIndexes(i);
         cols.push_back(ColumnType2D(
-                {ColumnType::PARAMETER_ESTIMATE, indices.second},
-                {ColumnType::PARAMETER_ESTIMATE, indices.first}));
+                {ColumnType::PARAMETER_ESTIMATE, indices.first},
+                {ColumnType::PARAMETER_ESTIMATE, indices.second}));
     }
 
     for (unsigned i = 0; i < n_parameters; ++i)

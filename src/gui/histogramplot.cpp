@@ -87,8 +87,8 @@ void HistogramPlot::UpdatePlot()
 void HistogramPlot::SetAxisTitles(QStringList axis_titles)
 {
     assert(axis_titles.size() == 2);
-    setAxisTitle(QwtPlot::xBottom, axis_titles.takeFirst());
     setAxisTitle(QwtPlot::yLeft  , axis_titles.takeFirst());
+    setAxisTitle(QwtPlot::xBottom, axis_titles.takeFirst());
 }
 
 bool HistogramPlot::SelectionActive()

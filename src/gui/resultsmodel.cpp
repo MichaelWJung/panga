@@ -217,8 +217,8 @@ QString ResultsModel::GetColumnName(const ExtendedColumnType& type) const
         case ColumnType::CORRELATION:
         {
             auto indices = GetCovarianceMatrixIndexes(i);
-            return "Corr_" + parameters_[indices.first ].GetName() +
-                   "_"     + parameters_[indices.second].GetName();
+            return "Corr_" + parameters_[indices.second].GetName() +
+                   "_"     + parameters_[indices.first ].GetName();
         }
         case ColumnType::RESIDUAL:
             return QString::fromStdString("Res_" +

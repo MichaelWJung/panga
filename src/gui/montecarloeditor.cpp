@@ -118,8 +118,8 @@ void MonteCarloEditor::SetAxisTitles(QStringList axis_titles)
 {
     assert(axis_titles.size() == 1 || axis_titles.size() == 2);
     if (axis_titles.size() == 2)
-        plot_name_for_window_title_ = axis_titles[1] + " vs " +
-                                      axis_titles[0];
+        plot_name_for_window_title_ = axis_titles[0] + " vs " +
+                                      axis_titles[1];
     else
         plot_name_for_window_title_ = axis_titles[0];
     if (axis_titles.size() == 1)
