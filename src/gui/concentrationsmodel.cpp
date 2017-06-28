@@ -104,7 +104,10 @@ std::vector<Sample> ConcentrationsModel::ReadSamplesFromStream(
     {
         try
         {
-            samples.emplace_back(CreateSampleFromLine(stream.readLine()));
+            auto line = stream.readLine();
+            if (line.isEmpty() || line.at(0) == '#')
+                continue;
+            samples.emplace_back(CreateSampleFromLine(line));
         }
         catch (std::invalid_argument)
         {
