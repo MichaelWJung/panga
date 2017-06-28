@@ -40,14 +40,14 @@ elseif(APPLE)
     find_package(Boost COMPONENTS iostreams thread system chrono serialization REQUIRED)
     find_package(zlib REQUIRED)
 else()
-    find_package(Boost COMPONENTS iostreams thread system chrono serialization REQUIRED)
+    find_package(Boost COMPONENTS iostreams thread system chrono serialization unit_test_framework REQUIRED)
+    find_package(ZLIB REQUIRED)
 endif()
 
 find_package(Qwt REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 
 if(NOT CMAKE_CROSSCOMPILING AND ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    find_package(Boost COMPONENTS unit_test_framework)
     find_package(GTest)
     find_package(GMock)
     if(Boost_UNIT_TEST_FRAMEWORK_FOUND AND GTEST_FOUND AND GMOCK_FOUND)
@@ -82,6 +82,13 @@ set(LIBRARIES
     ${Boost_LIBRARIES}
     ${ZLIB_LIBRARY}
     )
+
+if(UNIX)
+    set(LIBRARIES
+        ${LIBRARIES}
+        -lpthread
+        )
+endif(UNIX)
 
 add_definitions(
     -DQT_DISABLE_DEPRECATED_BEFORE
