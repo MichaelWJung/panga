@@ -139,7 +139,6 @@ elseif(WIN32)
     set(CPACK_GENERATOR "NSIS")
     set(CPACK_NSIS_DISPLAY_NAME "Panga")
     set(CPACK_NSIS_INSTALLED_ICON_NAME "panga.exe")
-    set(CPACK_NSIS_MUI_FINISHPAGE_RUN "panga.exe")
     set(CPACK_NSIS_MENU_LINKS "panga" "Panga")
     if(CMAKE_SIZEOF_VOID_P EQUAL 8) #64 bit Windows?
         set(CPACK_SYSTEM_NAME "win64")
