@@ -92,6 +92,10 @@ ResultsWindow::ResultsWindow() :
             this, SLOT(Save()));
     connect(ui->action_save_as, SIGNAL(triggered()),
             this, SLOT(SaveAs()));
+    connect(ui->save_results_as_csv_button, SIGNAL(clicked(bool)),
+            ui->results_view, SLOT(SaveAsCsv()));
+    connect(ui->save_monte_carlo_summary_as_csv_button, SIGNAL(clicked(bool)),
+            ui->monte_carlo_summary_view, SLOT(SaveAsCsv()));
 
     setAttribute(Qt::WA_DeleteOnClose);
 }

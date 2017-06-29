@@ -18,7 +18,9 @@
 
 #include <QApplication>
 #include <QClipboard>
+#include <QFileDialog>
 #include <QMenu>
+#include <QTextStream>
 
 #include <algorithm>
 #include <iostream>
@@ -47,14 +49,76 @@ ResultsView::ResultsView(QWidget* parent) :
             this, SLOT(CopyWithHeaders()));
 }
 
+void ResultsView::SaveAsCsv()
+{
+    std::set<int> cols;
+    std::set<int> rows;
+    for (int i = 0; i < model()->columnCount(); ++i)
+        cols.insert(i);
+    for (int i = 0; i < model()->rowCount(); ++i)
+        rows.insert(i);
+    QString table = CreateTable(cols, rows, true, ',');
+
+    QString filename = QFileDialog::getSaveFileName(
+            this,
+            "Save as csv",
+            QString(),
+            "CSV file (*.csv)");
+    if (filename.isEmpty())
+        return;
+    if (!filename.endsWith(".csv", Qt::CaseInsensitive))
+        filename.append(".csv");
+    QFile file(filename);
+    if (!file.open(QIODevice::WriteOnly))
+        return;
+    QTextStream stream(&file);
+    stream << table;
+    file.close();
+}
+
+QString ResultsView::CreateTable(
+    const std::set<int>& cols,
+    const std::set<int>& rows,
+    bool include_headers,
+    char separator)
+{
+    QString table;
+    int last_col = *--cols.end();
+    int last_row = *--rows.end();
+    if (include_headers)
+    {
+        table.append(separator);
+        for (int col : cols)
+        {
+            table.append(model()->headerData(col, Qt::Horizontal).toString());
+            table.append(col == last_col ? '\n' : separator);
+        }
+    }    
+    for (int row : rows)
+    {
+        if (include_headers)
+            table.append(model()->headerData(row, Qt::Vertical).
+                    toString() + separator);
+        for (int col : cols)
+        {
+            table.append(model()->data(model()->index(row, col)).toString());
+            if (col != last_col)
+                table.append(separator);
+        }
+        if (row != last_row)
+            table.append('\n');
+    }
+    return table;
+}
+
 void ResultsView::Copy(bool include_headers)
 {
     if (!selectionModel()->hasSelection())
         return;
-    
+
     std::set<int> cols;
     std::set<int> rows;
-   
+
     // Irgendwie macht das MonteCarloSummaryProxyModel hier Ärger und gibt
     // ungültige Indizes zurück wenn man selectedIndexes() verwendet.
     // Daher so, das scheint zu funktionieren.
@@ -64,39 +128,10 @@ void ResultsView::Copy(bool include_headers)
     for (int i = 0; i < model()->rowCount(); ++i)
         if (selectionModel()->rowIntersectsSelection(i, QModelIndex()))
             rows.insert(i);
-    
+
     if (cols.empty() || rows.empty())
         return;
-    
-    int last_col = *--cols.end();
-    int last_row = *--rows.end();
-        
-    QString table;
-    
-    if (include_headers)
-    {
-        table.append('\t');
-        for (int col : cols)
-        {
-            table.append(model()->headerData(col, Qt::Horizontal).toString());
-            table.append(col == last_col ? '\n' : '\t');
-        }
-    }    
-    for (int row : rows)
-    {
-        if (include_headers)
-            table.append(model()->headerData(row, Qt::Vertical).
-                    toString() + '\t');
-        for (int col : cols)
-        {
-            table.append(model()->data(model()->index(row, col)).toString());
-            if (col != last_col)
-                table.append('\t');
-        }
-        if (row != last_row)
-            table.append('\n');
-    }
-    
+    QString table = CreateTable(cols, rows, include_headers, '\t');
     QApplication::clipboard()->setText(table);
 }
 

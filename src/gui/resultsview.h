@@ -30,6 +30,16 @@ class ResultsView : public QTableView
 public:
     explicit ResultsView(QWidget* parent = 0);
     
+public slots:
+    void SaveAsCsv();
+
+private:
+    QString CreateTable(
+        const std::set<int>& cols,
+        const std::set<int>& rows,
+        bool include_headers,
+        char separator);
+
 private slots:
     void Copy(bool include_headers = false);
     void CopyWithHeaders();
