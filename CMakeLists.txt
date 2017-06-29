@@ -124,12 +124,12 @@ elseif(UNIX)
     set(CPACK_DEBIAN_PACKAGE_DEPENDS
         "libqwt6, libqtcore4 (>= 4:4.8.0), libqtgui4 (>= 4:4.8.0), libqt4-svg (>= 4:4.8.0), libstdc++6 (>= 4.6), libc6 (>= 2.14), libgcc1 (>= 1:4.1.1)")
 elseif(WIN32)
-	set(CPACK_GENERATOR "ZIP")
-	if(CMAKE_SIZEOF_VOID_P EQUAL 8) #64 bit Windows?
-	    set(CPACK_SYSTEM_NAME "win64")
-	else()
-	    set(CPACK_SYSTEM_NAME "win32")
-	endif()
+    set(CPACK_GENERATOR "ZIP")
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8) #64 bit Windows?
+        set(CPACK_SYSTEM_NAME "win64")
+    else()
+        set(CPACK_SYSTEM_NAME "win32")
+    endif()
 endif()
 
 include(CPack)
