@@ -92,11 +92,12 @@ include_directories(
 add_library(gui
     ${gui_SOURCES}
     ${gui_FORMS_HEADERS}
+	${gui_RESOURCES_COMPILED}
     )
 
 qt5_use_modules(gui Widgets)
 
-add_executable(${PROJECT_NAME} MACOSX_BUNDLE WIN32 main.cpp)
+add_executable(${PROJECT_NAME} MACOSX_BUNDLE WIN32 main.cpp ${RES_FILES})
 target_link_libraries(
     ${PROJECT_NAME}
     gui
