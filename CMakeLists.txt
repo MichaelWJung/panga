@@ -24,11 +24,7 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
-#-O3 macht Probleme, daher nur -O2 nutzen
-if(CMAKE_BUILD_TYPE MATCHES Release AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX))
-    unset(CMAKE_BUILD_TYPE)
-    add_definitions(-O2)
-endif()
+set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 set(CMAKE_AUTOMOC ON)
