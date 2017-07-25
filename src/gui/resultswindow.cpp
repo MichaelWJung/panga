@@ -183,10 +183,15 @@ void ResultsWindow::SetupResultsModelsAndViews(
         connect(mc_summary_proxy_model_, SIGNAL(layoutChanged()),
                 ui->monte_carlo_summary_view, SLOT(resizeColumnsToContents()));
     }
-    ui->tab_widget->setTabEnabled(1, n_monte_carlos_);
-    ui->tab_widget->setTabEnabled(2, n_monte_carlos_);
-    ui->action_choose_monte_carlo_plots->setEnabled(n_monte_carlos_);
-    ui->action_export_monte_carlo_data ->setEnabled(n_monte_carlos_);
+
+    bool anySamples = results_model->rowCount() != 0;
+    ui->save_results_as_csv_button->setEnabled(anySamples);
+    bool hasMonteCarloResults = anySamples && n_monte_carlos_;
+
+    ui->tab_widget->setTabEnabled(1, hasMonteCarloResults);
+    ui->tab_widget->setTabEnabled(2, hasMonteCarloResults);
+    ui->action_choose_monte_carlo_plots->setEnabled(hasMonteCarloResults);
+    ui->action_export_monte_carlo_data ->setEnabled(hasMonteCarloResults);
 
     mc_summary_proxy_model_->SetSourceModel(monte_carlo_model_);
 
