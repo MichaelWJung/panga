@@ -123,7 +123,7 @@ void MonteCarloEditor::SetAxisTitles(QStringList axis_titles)
     else
         plot_name_for_window_title_ = axis_titles[0];
     if (axis_titles.size() == 1)
-        axis_titles.push_back("Counts");
+        axis_titles.push_front("Counts");
     ui->plot->SetAxisTitles(axis_titles);
     UpdateWindowTitle();
 }
