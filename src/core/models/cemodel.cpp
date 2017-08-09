@@ -44,7 +44,7 @@ double CeModel::CalculateConcentration(
 {
     DEFINE_PARAMETER_ACCESSOR(x, parameters);
 
-    if (AreConstraintsApplied() && (x->F() < 0 || x->A() < 0 || x->F() > 30))
+    if (AreConstraintsApplied() && (x->F() < 0 || x->A() < 0))
         return std::numeric_limits<double>::quiet_NaN();
     
     return c_eq +
