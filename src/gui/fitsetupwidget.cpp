@@ -23,6 +23,7 @@
 #include <QPushButton>
 #include <QScrollBar>
 #include <QVBoxLayout>
+#include <QAction>
 
 #include <algorithm>
 
