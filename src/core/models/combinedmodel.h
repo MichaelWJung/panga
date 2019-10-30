@@ -53,7 +53,7 @@ public:
       Derzeit können die C_eq-Berechnungsmethoden noch nicht gewählt werden. Für Xe wird Clever
       verwendet, für alle anderen Gase Weiss.
       */
-    CombinedModel(ModelFactory* factory);
+    CombinedModel(ModelFactory* factory, ModelFactory* ceqmethod_factory);
 
     //! Setzt neue Parameter-Werte.
     /*!
@@ -140,6 +140,10 @@ private:
     //! ModelFactory wird gespeichert um das CombinedModel leicht klonen zu können.
     ModelFactory*
     factory_;
+
+    //! ModelFactory wird gespeichert um das CombinedModel leicht klonen zu können.
+    ModelFactory*
+    ceqmethod_factory_;
 
     //! ParameterManager der zur Konfiguration der Modelle verwendet wird.
     std::shared_ptr<ParameterManager> manager_;

@@ -20,8 +20,9 @@
 
 #include "combinedmodel.h"
 
-CombinedModel::CombinedModel(ModelFactory* factory) :
+CombinedModel::CombinedModel(ModelFactory* factory, ModelFactory* ceqmethod_factory=nullptr) :
     factory_(factory),
+    ceqmethod_factory_(ceqmethod_factory),
     manager_(std::make_shared<ParameterManager>()),
     model_  (factory->CreateModel(manager_)),
     weiss_  (std::make_shared<WeissMethod> (manager_)),
@@ -138,7 +139,7 @@ unsigned CombinedModel::GetParameterIndex(const std::string &name) const
 
 std::shared_ptr<CombinedModel> CombinedModel::clone() const
 {
-    auto ret = std::make_shared<CombinedModel>(factory_);
+    auto ret = std::make_shared<CombinedModel>(factory_, ceqmethod_factory_);
     ret->SetApplyConstraints(AreConstraintsApplied());
     return ret;
 }

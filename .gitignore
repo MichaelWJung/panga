@@ -9,3 +9,4 @@ panga.app/Contents/MacOS/panga
 *~
 *.kate-swp
 .directory
+.vscode

@@ -374,8 +374,19 @@ void FitSetup::SetModel(QString name)
         ResetModel();
         return;
     }
-    
-    model_ = CombinedModelFactory(factory).CreateModel();
+
+    ModelFactory* ceqmethod_factory;
+    try
+    {
+        factory = ModelManager::Get().GetModelFactory(name.toStdString());
+    }
+    catch (ModelManager::ModelNotFoundError)
+    {
+        ResetModel();
+        return;
+    }    
+
+    model_ = CombinedModelFactory(factory, ceqmethod_factory).CreateModel();
     InitializeParameters();
     emit ModelChanged();
 }
