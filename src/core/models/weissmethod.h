@@ -87,6 +87,10 @@ public:
                                          double T,
                                          GasType gas);
 
+    static const std::string NAME;
+    
+    std::string GetCEqMethodName() const;  //WIP: Verwendet?
+
 private:
 
     //! Berechnet die exp-Funktion aus der Weiss-Formel.

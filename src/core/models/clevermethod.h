@@ -96,6 +96,10 @@ public:
                                          double T,
                                          GasType gas);
 
+    static const std::string NAME;
+    
+    std::string GetCEqMethodName() const; //WIP: Verwendet?
+
 private:
     //! Volumen-Anteil von Xe in trockener Luft.
     static const double z_;
