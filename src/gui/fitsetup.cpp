@@ -83,7 +83,7 @@ FitSetup::FitSetup(const FitSetup& other) :
             other.individually_configured_parameters_),
     n_monte_carlos_(other.n_monte_carlos_),
     name_(other.name_),
-    model_(other.model_->clone())
+    combined_model_(other.combined_model_->clone())
 {
     ConnectSignalsAndSlots();
 }
@@ -106,7 +106,7 @@ FitSetup& FitSetup::operator=(const FitSetup& other)
                 other.individually_configured_parameters_;
         n_monte_carlos_ = other.n_monte_carlos_;
         name_ = other.name_;
-        model_ = other.model_->clone();
+        combined_model_ = other.combined_model_->clone();
         
         ConnectSignalsAndSlots();
     }
@@ -269,9 +269,9 @@ void FitSetup::SetGasInUse(GasType gas, bool use)
 
 std::vector<ModelParameter> FitSetup::GetParametersInOrder() const
 {
-    if (!model_)
+    if (!combined_model_)
         throw std::runtime_error("No active model");
-    return model_->GetParametersInOrder();
+    return combined_model_->GetParametersInOrder();
 }
 
 bool FitSetup::GetParameterFitState(const std::string& parameter_name) const
@@ -298,7 +298,7 @@ void FitSetup::InitializeParameters()
     individually_configured_parameters_.clear();
     
     std::vector<ModelParameter> parameters =
-            model_->GetParametersInOrder();
+            combined_model_->GetParametersInOrder();
     for (const auto& parameter : parameters)
     {
         parameter_fit_states_[parameter.name] = false;
@@ -347,12 +347,12 @@ void FitSetup::SetParameterIndividuallyConfigured(
 
 bool FitSetup::HasModel() const
 {
-    return static_cast<bool>(model_);
+    return static_cast<bool>(combined_model_);
 }
 
 void FitSetup::ResetModel()
 {
-    model_.reset();
+    combined_model_.reset();
     emit ModelChanged();
 }
 
@@ -386,7 +386,7 @@ void FitSetup::SetModel(QString name)
         return;
     }    
 
-    model_ = CombinedModelFactory(factory, ceqmethod_factory).CreateModel();
+    combined_model_ = CombinedModelFactory(factory, ceqmethod_factory).CreateModel();
     InitializeParameters();
     emit ModelChanged();
 }
@@ -395,7 +395,7 @@ QString FitSetup::GetModelName() const
 {
     if (!HasModel())
         return "";
-    return QString::fromStdString(model_->GetExcessAirModelName());
+    return QString::fromStdString(combined_model_->GetExcessAirModelName());
 }
 
 QString FitSetup::GetName() const
@@ -406,14 +406,14 @@ QString FitSetup::GetName() const
 bool FitSetup::AreConstraintsApplied() const
 {
     if (HasModel())
-        return model_->AreConstraintsApplied();
+        return combined_model_->AreConstraintsApplied();
     return false;
 }
 
 void FitSetup::SetApplyConstraints(bool apply)
 {
     if (HasModel())
-        model_->SetApplyConstraints(apply);
+        combined_model_->SetApplyConstraints(apply);
 }
 
 void FitSetup::LoadSamplesFromFile()
@@ -447,7 +447,7 @@ RunData FitSetup::PrepareGasConcentrations() const
 std::shared_ptr<GuiResultsProcessor> FitSetup::SetupResultsProcessor()
 {
     std::vector<ModelParameter> parameters;
-    for (const auto& parameter : model_->GetParametersInOrder())
+    for (const auto& parameter : combined_model_->GetParametersInOrder())
         if (parameter_fit_states_.at(parameter.name))
             parameters.push_back(parameter);
     
@@ -508,9 +508,9 @@ std::vector<FitConfiguration> FitSetup::PrepareFitConfigurations() const
 FitConfiguration FitSetup::PrepareFitConfigurationCommons() const
 {
     FitConfiguration config;
-    config.model = model_;
+    config.model = combined_model_;
     ModelParameterConfigs model_parameters;
-    for (const auto& parameter : model_->GetParameterNamesInOrder())
+    for (const auto& parameter : combined_model_->GetParameterNamesInOrder())
     {
         double value = parameter_values_.at(parameter);
         if (parameter_fit_states_.at(parameter))
@@ -538,7 +538,7 @@ FitConfiguration FitSetup::PrepareEnsembleFitConfiguration()
     unsigned n_samples = concentrations_->EnabledSize();
     
     FitConfiguration config;
-    config.model = model_;
+    config.model = combined_model_;
     if (!n_samples) return config;
     config.n_monte_carlos = n_monte_carlos_;
     config.model_parameter_configs.resize(n_samples);
@@ -554,7 +554,7 @@ FitConfiguration FitSetup::PrepareEnsembleFitConfiguration()
     {
         config.sample_numbers.push_back(i);
         for (const auto& parameter :
-                model_->GetParameterNamesInOrder())
+                combined_model_->GetParameterNamesInOrder())
         {
             double value;
             if (individually_configured_parameters_.count(parameter))
@@ -595,7 +595,7 @@ std::vector<std::string> FitSetup::GetFittedParametersInOrder() const
 {
     std::vector<std::string> parameters;
     for (const auto& parameter :
-            model_->GetParameterNamesInOrder())
+            combined_model_->GetParameterNamesInOrder())
         if (parameter_fit_states_.at(parameter))
             parameters.push_back(parameter);
     return parameters;
@@ -618,7 +618,7 @@ void FitSetup::DetermineEnsembleAndIndividuallyFittedParameters(
     }
     
     for (const auto& parameter :
-            model_->GetParameterNamesInOrder())
+            combined_model_->GetParameterNamesInOrder())
     {
         if (!parameter_ensemble_states.count(parameter)) continue;
         if (parameter_ensemble_states[parameter])

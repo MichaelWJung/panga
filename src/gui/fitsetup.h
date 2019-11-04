@@ -138,7 +138,7 @@ private:
     
     QString name_;
 
-    std::shared_ptr<CombinedModel> model_;
+    std::shared_ptr<CombinedModel> combined_model_;
     
     static const QString DEFAULT_NAME;
     
@@ -157,7 +157,7 @@ private:
 template<class Archive>
 void FitSetup::save(Archive& ar, const unsigned version) const
 {
-    std::string model = model_->GetExcessAirModelName();
+    std::string model = combined_model_->GetExcessAirModelName();
     ar << model;
     bool constraints_applied = AreConstraintsApplied();
     ar << constraints_applied;
