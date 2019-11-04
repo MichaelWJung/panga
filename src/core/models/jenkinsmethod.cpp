@@ -22,16 +22,16 @@
 
 #include "physicalproperties.h"
 
-#include "weissmethod.h"
+#include "jenkinsmethod.h"
 
-const std::string WeissMethod::NAME = "WeissClever";
+const std::string JenkinsMethod::NAME = "JenkinsClever"; 
 
-std::string WeissMethod::GetCEqMethodName() const   //WIP: Verwendet?
+std::string JenkinsMethod::GetCEqMethodName() const //WIP: Verwendet?
 {
-    return WeissMethod::NAME;
+    return JenkinsMethod::NAME;
 }
 
-WeissMethod::WeissMethod(std::shared_ptr<ParameterManager> manager)
+JenkinsMethod::JenkinsMethod(std::shared_ptr<ParameterManager> manager)
 {
     RegisterParameters(manager,
                        "p", "atm" ,  1., -NOBLE_INF(), NOBLE_INF(), NOBLE_INF(),
@@ -39,7 +39,7 @@ WeissMethod::WeissMethod(std::shared_ptr<ParameterManager> manager)
                        "T", "°C"  , 10., -NOBLE_INF(), NOBLE_INF(), NOBLE_INF());
 }
 
-double WeissMethod::CalculateConcentration(
+double JenkinsMethod::CalculateConcentration(
     std::shared_ptr<ParameterAccessor> parameters,
     GasType gas
     ) const
@@ -49,7 +49,7 @@ double WeissMethod::CalculateConcentration(
     return CalculateConcentration(x->p(), x->S(), x->T(), gas);
 }
 
-void WeissMethod::CalculateDerivatives(
+void JenkinsMethod::CalculateDerivatives(
     std::shared_ptr<ParameterAccessor> parameters,
     std::shared_ptr<DerivativeCollector> derivatives,
     GasType gas
@@ -57,7 +57,7 @@ void WeissMethod::CalculateDerivatives(
 {
     if (gas == Gas::XE)
         throw std::runtime_error("Xe equilibrium concentrations cannot be calculated using the"
-                                 " Weiss method.");
+                                 " Jenkins method.");
 
     DEFINE_PARAMETER_ACCESSOR(x, parameters);
 
@@ -73,18 +73,18 @@ void WeissMethod::CalculateDerivatives(
     GasType gas_for_calculations = gas != Gas::HE3 ? gas : Gas::HE;
     
     const double exponential =
-            CalcWeissExpFunction(x->T(), x->S(), gas_for_calculations) / 1000.;
+            CalcJenkinsExpFunction(x->T(), x->S(), gas_for_calculations) / 1000.;
 
     DERIVATIVE_LOOP(parameter, derivative, derivatives)
     {
         switch (parameter)
         {
-        case Weiss::p:
+        case Jenkins::p:
             //Ableitung nach dem Druck.
             derivative = exponential / (1. - p_w);
             break;
 
-        case Weiss::S:
+        case Jenkins::S:
             //Ableitung nach der Salinität.
             derivative = exponential * frac *
                           (s1[gas_for_calculations] +
@@ -92,7 +92,7 @@ void WeissMethod::CalculateDerivatives(
                            s3[gas_for_calculations] * t_k * t_k);
             break;
 
-        case Weiss::T:
+        case Jenkins::T:
             //Ableitung nach der Temperatur.
             derivative = exponential *
 
@@ -111,7 +111,7 @@ void WeissMethod::CalculateDerivatives(
                            PhysicalProperties::CalcSaturationVaporPressureDerivative(x->T()));
             break;
 
-        case Weiss::OTHER:
+        case Jenkins::OTHER:
         default:
             derivative = 0.;
             break;
@@ -127,12 +127,12 @@ void WeissMethod::CalculateDerivatives(
             const double r_eq = PhysicalProperties::CalcReq(x->T(), x->S());
             switch (parameter)
             {
-                case Weiss::S:
+                case Jenkins::S:
                     derivative = derivative * r_eq + concentration *
                           PhysicalProperties::CalcReqDerivedByS(x->T(), x->S());
                     break;
                     
-                case Weiss::T:
+                case Jenkins::T:
                     derivative = derivative * r_eq + concentration *
                           PhysicalProperties::CalcReqDerivedByT(x->T(), x->S());
                     break;
@@ -145,7 +145,7 @@ void WeissMethod::CalculateDerivatives(
     }
 }
 
-double WeissMethod::CalcWeissExpFunction(double t, double s, GasType gas)
+double JenkinsMethod::CalcJenkinsExpFunction(double t, double s, GasType gas)
 {
     // Temperatur in Kelvin
     const double t_k = t + 273.15;
@@ -159,11 +159,11 @@ double WeissMethod::CalcWeissExpFunction(double t, double s, GasType gas)
                          s3[gas] * t_k * t_k));
 }
 
-double WeissMethod::CalculateConcentration(double p, double S, double T, GasType gas)
+double JenkinsMethod::CalculateConcentration(double p, double S, double T, GasType gas)
 {
     if (gas == Gas::XE)
         throw std::runtime_error("Xe equilibrium concentrations cannot be calculated using the"
-                                 " Weiss method.");
+                                 " Jenkins method.");
 
     // Sättigungsdampfdruck in atm.
     const double p_w = PhysicalProperties::CalcSaturationVaporPressure(T);
@@ -172,7 +172,7 @@ double WeissMethod::CalculateConcentration(double p, double S, double T, GasType
     const double p_dry = p - p_w;
 
     double concentration =
-            CalcWeissExpFunction(T,
+            CalcJenkinsExpFunction(T,
                                  S,
                                  gas != Gas::HE3 ? gas : Gas::HE) *
             p_dry / (1 - p_w) / 1000;
@@ -183,39 +183,40 @@ double WeissMethod::CalculateConcentration(double p, double S, double T, GasType
     return concentration;
 }
 
+// WIP: Sind noch Weiss-Daten!
 //Die Reihenfolge der Gase muss dem enum in "gas.h" entsprechen.
 //Die Konstanten wurden umgerechnet, um das Teilen durch 100 zu vermeiden.
-const std::vector<double> WeissMethod::t1 = boost::assign::list_of(  -808.2722264341 ) //Helium
+const std::vector<double> JenkinsMethod::t1 = boost::assign::list_of(  -808.2722264341 ) //Helium
                                                                   (  -819.4071883742 ) //Neon
                                                                   (  -846.9984052407 ) //Argon
                                                                   (  -455.6264185803 );//Krypton
 
-const std::vector<double> WeissMethod::t2 = boost::assign::list_of( 21634.42         ) //Helium
+const std::vector<double> JenkinsMethod::t2 = boost::assign::list_of( 21634.42         ) //Helium
                                                                   ( 22519.46         ) //Neon
                                                                   ( 25181.39         ) //Argon
                                                                   ( 15358.17         );//Krypton
 
-const std::vector<double> WeissMethod::t3 = boost::assign::list_of(   139.2032       ) //Helium
+const std::vector<double> JenkinsMethod::t3 = boost::assign::list_of(   139.2032       ) //Helium
                                                                   (   140.8863       ) //Neon
                                                                   (   145.2337       ) //Argon
                                                                   (    74.469        );//Krypton
 
-const std::vector<double> WeissMethod::t4 = boost::assign::list_of(    -0.226202     ) //Helium
+const std::vector<double> JenkinsMethod::t4 = boost::assign::list_of(    -0.226202     ) //Helium
                                                                   (    -0.22629      ) //Neon
                                                                   (    -0.222046     ) //Argon
                                                                   (    -0.100189     );//Krypton
 
-const std::vector<double> WeissMethod::s1 = boost::assign::list_of(    -0.044781     ) //Helium
+const std::vector<double> JenkinsMethod::s1 = boost::assign::list_of(    -0.044781     ) //Helium
                                                                   (    -0.127113     ) //Neon
                                                                   (    -0.038729     ) //Argon
                                                                   (    -0.011213     );//Krypton
 
-const std::vector<double> WeissMethod::s2 = boost::assign::list_of(     0.00023541   ) //Helium
+const std::vector<double> JenkinsMethod::s2 = boost::assign::list_of(     0.00023541   ) //Helium
                                                                   (     0.00079277   ) //Neon
                                                                   (     0.00017171   ) //Argon
                                                                   (    -1.844e-05    );//Krypton
 
-const std::vector<double> WeissMethod::s3 = boost::assign::list_of(    -3.4266e-07   ) //Helium
+const std::vector<double> JenkinsMethod::s3 = boost::assign::list_of(    -3.4266e-07   ) //Helium
                                                                   (    -1.29095e-06  ) //Neon
                                                                   (    -2.1281e-07   ) //Argon
                                                                   (     1.1201e-07   );//Krypton
