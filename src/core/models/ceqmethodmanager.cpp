@@ -37,13 +37,10 @@
 
 #include "ceqmethodmanager.h"
 
+//WIP: Achtung: Die Methoden werden in FitSetup::SetModel über GetCEqMethodFactory(const std::string &name) nach ihren Namen ausgewählt.
+//     Namen, die Teilmengen anderer Namen sind können darüber nicht eindeutig zugeordnet werden.
 const std::vector<std::shared_ptr<CEqMethodFactory>> CEqMethodManager::CEQMETHOD_FACTORIES =
-    {// std::make_shared<CeModelFactory>(),
-    //  std::make_shared<GrModelFactory>(),
-    //  std::make_shared<OdModelFactory>(),
-    //  std::make_shared<PdModelFactory>(),
-    //  std::make_shared<PrModelFactory>(),
-     std::make_shared<WeissMethodFactory>(),
+    {std::make_shared<WeissMethodFactory>(),
      std::make_shared<JenkinsMethodFactory>()
      };
 

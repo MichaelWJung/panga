@@ -24,7 +24,7 @@
 
 #include "jenkinsmethod.h"
 
-const std::string JenkinsMethod::NAME = "JenkinsClever";
+const std::string JenkinsMethod::NAME = "Jenkins";
 
 std::string JenkinsMethod::GetCEqMethodName() const //WIP: Verwendet?
 {

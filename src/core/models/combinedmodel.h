@@ -123,6 +123,9 @@ public:
     //! Gibt den Namen des verwendeten ExcessAirModels zurück.
     std::string GetExcessAirModelName() const;
 
+    //! Gibt den Namen der verwendeten CEqMethod zurück.
+    std::string GetCEqMethodName() const;
+
     //! \brief Wenn auf wahr gesetzt wird vom Modell nan zurückgegeben falls
     //! Parameterwerte außerhalb der Constraints angegeben werden.
     void SetApplyConstraints(bool apply);

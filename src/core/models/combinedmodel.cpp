@@ -149,6 +149,11 @@ std::string CombinedModel::GetExcessAirModelName() const //WIP: Auch noch für M
     return  model_->GetModelName();
 }
 
+std::string CombinedModel::GetCEqMethodName() const 
+{
+    return  ceqmethod_->GetCEqMethodName();
+}
+
 void CombinedModel::SetApplyConstraints(bool apply)
 {
     model_->SetApplyConstraints(apply);
