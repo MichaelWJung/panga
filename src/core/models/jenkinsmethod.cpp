@@ -24,7 +24,7 @@
 
 #include "jenkinsmethod.h"
 
-const std::string JenkinsMethod::NAME = "JenkinsClever"; 
+const std::string JenkinsMethod::NAME = "JenkinsClever";
 
 std::string JenkinsMethod::GetCEqMethodName() const //WIP: Verwendet?
 {
@@ -55,10 +55,6 @@ void JenkinsMethod::CalculateDerivatives(
     GasType gas
     ) const
 {
-    if (gas == Gas::XE)
-        throw std::runtime_error("Xe equilibrium concentrations cannot be calculated using the"
-                                 " Jenkins method.");
-
     DEFINE_PARAMETER_ACCESSOR(x, parameters);
 
     // Temperatur in Kelvin
@@ -89,7 +85,8 @@ void JenkinsMethod::CalculateDerivatives(
             derivative = exponential * frac *
                           (s1[gas_for_calculations] +
                            s2[gas_for_calculations] * t_k +
-                           s3[gas_for_calculations] * t_k * t_k);
+                           s3[gas_for_calculations] * t_k * t_k +
+                           s4[gas_for_calculations] * 2* x->S() );
             break;
 
         case Jenkins::T:
@@ -118,7 +115,7 @@ void JenkinsMethod::CalculateDerivatives(
         }
     }
     
-    if (gas == Gas::HE3)
+    if (gas == Gas::HE3) //WIP: durchgehen
     {
         DERIVATIVE_LOOP(parameter, derivative, derivatives)
         {
@@ -156,15 +153,12 @@ double JenkinsMethod::CalcJenkinsExpFunction(double t, double s, GasType gas)
                     t4[gas] * t_k +
                     s * (s1[gas] +
                          s2[gas] * t_k +
-                         s3[gas] * t_k * t_k));
+                         s3[gas] * t_k * t_k)+
+                    s * s * s4[gas]);
 }
 
 double JenkinsMethod::CalculateConcentration(double p, double S, double T, GasType gas)
 {
-    if (gas == Gas::XE)
-        throw std::runtime_error("Xe equilibrium concentrations cannot be calculated using the"
-                                 " Jenkins method.");
-
     // Sättigungsdampfdruck in atm.
     const double p_w = PhysicalProperties::CalcSaturationVaporPressure(T);
 
@@ -183,40 +177,53 @@ double JenkinsMethod::CalculateConcentration(double p, double S, double T, GasTy
     return concentration;
 }
 
-// WIP: Sind noch Weiss-Daten!
+//WIP: Molekulares Volumen der Gase eigentlich hier definieren?
 //Die Reihenfolge der Gase muss dem enum in "gas.h" entsprechen.
 //Die Konstanten wurden umgerechnet, um das Teilen durch 100 zu vermeiden.
-const std::vector<double> JenkinsMethod::t1 = boost::assign::list_of(  -808.2722264341 ) //Helium
-                                                                  (  -819.4071883742 ) //Neon
-                                                                  (  -846.9984052407 ) //Argon
-                                                                  (  -455.6264185803 );//Krypton
+const std::vector<double> JenkinsMethod::t1 = boost::assign::list_of( -816.304426860976) //Helium
+                                                                    (-1309.33954018636 ) //Neon
+                                                                    (-1048.80572892443 ) //Argon
+                                                                    ( -435.723435738912) //Krypton
+                                                                    ( -940.331844325884);//Xenon
 
-const std::vector<double> JenkinsMethod::t2 = boost::assign::list_of( 21634.42         ) //Helium
-                                                                  ( 22519.46         ) //Neon
-                                                                  ( 25181.39         ) //Argon
-                                                                  ( 15358.17         );//Krypton
-
-const std::vector<double> JenkinsMethod::t3 = boost::assign::list_of(   139.2032       ) //Helium
-                                                                  (   140.8863       ) //Neon
-                                                                  (   145.2337       ) //Argon
-                                                                  (    74.469        );//Krypton
-
-const std::vector<double> JenkinsMethod::t4 = boost::assign::list_of(    -0.226202     ) //Helium
-                                                                  (    -0.22629      ) //Neon
-                                                                  (    -0.222046     ) //Argon
-                                                                  (    -0.100189     );//Krypton
-
-const std::vector<double> JenkinsMethod::s1 = boost::assign::list_of(    -0.044781     ) //Helium
-                                                                  (    -0.127113     ) //Neon
-                                                                  (    -0.038729     ) //Argon
-                                                                  (    -0.011213     );//Krypton
-
-const std::vector<double> JenkinsMethod::s2 = boost::assign::list_of(     0.00023541   ) //Helium
-                                                                  (     0.00079277   ) //Neon
-                                                                  (     0.00017171   ) //Argon
-                                                                  (    -1.844e-05    );//Krypton
-
-const std::vector<double> JenkinsMethod::s3 = boost::assign::list_of(    -3.4266e-07   ) //Helium
-                                                                  (    -1.29095e-06  ) //Neon
-                                                                  (    -2.1281e-07   ) //Argon
-                                                                  (     1.1201e-07   );//Krypton
+const std::vector<double> JenkinsMethod::t2 = boost::assign::list_of(21759.91          ) //Helium
+                                                                    (35262.01          ) //Neon
+                                                                    (30543.47          ) //Argon
+                                                                    (15356.54          ) //Krypton
+                                                                    (29282.34          );//Xenon
+ 
+const std::vector<double> JenkinsMethod::t3 = boost::assign::list_of(  140.7506        ) //Helium
+                                                                    (  226.9676        ) //Neon
+                                                                    (  180.5278        ) //Argon
+                                                                    (   70.1969        ) //Krypton
+                                                                    (  157.6127        );//Xenon
+ 
+const std::vector<double> JenkinsMethod::t4 = boost::assign::list_of(   -0.2301954     ) //Helium
+                                                                    (   -0.3713393     ) //Neon
+                                                                    (   -0.279945      ) //Argon
+                                                                    (   -0.0852524     ) //Krypton
+                                                                    (   -0.2266895     );//Xenon
+ 
+const std::vector<double> JenkinsMethod::s1 = boost::assign::list_of(   -0.038129      ) //Helium
+                                                                    (   -0.06386       ) //Neon
+                                                                    (   -0.066942      ) //Argon
+                                                                    (   -0.049522      ) //Krypton
+                                                                    (   -0.084915      );//Xenon
+ 
+const std::vector<double> JenkinsMethod::s2 = boost::assign::list_of(    0.0001919     ) //Helium
+                                                                    (    0.00035326    ) //Neon
+                                                                    (    0.00037201    ) //Argon
+                                                                    (    0.00024434    ) //Krypton
+                                                                    (    0.00047996    );//Xenon
+ 
+const std::vector<double> JenkinsMethod::s3 = boost::assign::list_of(   -2.6898E-07    ) //Helium
+                                                                    (   -5.3258E-07    ) //Neon
+                                                                    (   -5.6364E-07    ) //Argon
+                                                                    (   -3.3968E-07    ) //Krypton
+                                                                    (   -7.3595E-07    );//Xenon
+ 
+const std::vector<double> JenkinsMethod::s4 = boost::assign::list_of(   -0.00000255    ) //Helium //WIP: Achtung, muss in JenkinsMethod auch drin sein
+                                                                    (    0.0000128     ) //Neon
+                                                                    (   -0.0000053     ) //Argon
+                                                                    (    0.00000419    ) //Krypton
+                                                                    (    0.00000669    );//Xenon

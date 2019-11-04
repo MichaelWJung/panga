@@ -28,7 +28,7 @@
 class CombinedModelFactory
 {
 public:
-    CombinedModelFactory(ModelFactory* factory = nullptr, ModelFactory* ceqmethod_factory = nullptr);
+    CombinedModelFactory(ModelFactory* factory = nullptr, CEqMethodFactory* ceqmethod_factory = nullptr);
     std::shared_ptr<CombinedModel> CreateModel() const;
     
     //! \todo Entfernen und durch die Methode in CombinedModel ersetzen.
@@ -36,7 +36,7 @@ public:
 
 private:
     ModelFactory* factory_;
-    ModelFactory* ceqmethod_factory_;
+    CEqMethodFactory* ceqmethod_factory_;
 };
 
 #endif // COMBINEDMODELFACTORY_H

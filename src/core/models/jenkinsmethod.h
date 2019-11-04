@@ -30,7 +30,7 @@
 #define NOBLE_IS_CEQ_CALCULATION_METHOD
 #include "generatehelperclasses.h"
 
-//! Berechnung von Gleichgewichtskonzentrationen nach Weiss. //WIP: Jenkins eintragen
+//! Berechnung von Gleichgewichtskonzentrationen nach Jenkins. //WIP: Jenkins hier eintragen:
 /*!
   Aus Kipfer et al. 2002, Noble Gases in Lakes and Ground Waters:
   \f[
@@ -116,6 +116,9 @@ private:
 
     //! Jenkins coefficient.
     static const std::vector<double> s3;
+
+    //! Jenkins coefficient.
+    static const std::vector<double> s4;
 };
 
 #endif // JENKINSMETHOD_H

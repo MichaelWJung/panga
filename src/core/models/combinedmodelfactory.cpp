@@ -20,7 +20,7 @@
 
 #include "combinedmodelfactory.h"
 
-CombinedModelFactory::CombinedModelFactory(ModelFactory* factory, ModelFactory* ceqmethod_factory) :
+CombinedModelFactory::CombinedModelFactory(ModelFactory* factory, CEqMethodFactory* ceqmethod_factory) :
     factory_(factory),
     ceqmethod_factory_(ceqmethod_factory)
 {
