@@ -127,18 +127,18 @@ along with Panga.  If not, see <http://www.gnu.org/licenses/>.
            </layout>
           </widget>
          </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="model_label">
+        <item row="2" column="0">
+          <widget class="QLabel" name="solubility_label">
            <property name="text">
-            <string>Mo&amp;del:</string>
+            <string>Solu&amp;bilities:</string>
            </property>
            <property name="buddy">
-            <cstring>model_combo_box</cstring>
+            <cstring>solubility_combo_box</cstring>
            </property>
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="QComboBox" name="model_combo_box">
+          <widget class="QComboBox" name="solubility_combo_box">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -148,13 +148,33 @@ along with Panga.  If not, see <http://www.gnu.org/licenses/>.
           </widget>
          </item>
          <item row="3" column="0">
+          <widget class="QLabel" name="model_label">
+           <property name="text">
+            <string>Mo&amp;del:</string>
+           </property>
+           <property name="buddy">
+            <cstring>model_combo_box</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QComboBox" name="model_combo_box">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
           <widget class="QLabel" name="parameters_to_fit_label">
            <property name="text">
             <string>Parameters to fit:</string>
            </property>
           </widget>
          </item>
-         <item row="3" column="1">
+         <item row="4" column="1">
           <widget class="QGroupBox" name="parameters_group_box">
            <property name="title">
             <string/>
@@ -162,14 +182,14 @@ along with Panga.  If not, see <http://www.gnu.org/licenses/>.
            <layout class="QVBoxLayout" name="verticalLayout_3"/>
           </widget>
          </item>
-         <item row="4" column="0">
+         <item row="5" column="0">
           <widget class="QLabel" name="initials_label">
            <property name="text">
             <string>Parameter initials:</string>
            </property>
           </widget>
          </item>
-         <item row="4" column="1">
+         <item row="5" column="1">
           <widget class="QGroupBox" name="initials_group_box">
            <property name="title">
             <string/>
@@ -177,14 +197,14 @@ along with Panga.  If not, see <http://www.gnu.org/licenses/>.
            <layout class="QGridLayout" name="gridLayout"/>
           </widget>
          </item>
-         <item row="5" column="0">
+         <item row="6" column="0">
           <widget class="QLabel" name="values_label">
            <property name="text">
             <string>Parameter values:</string>
            </property>
           </widget>
          </item>
-         <item row="5" column="1">
+         <item row="6" column="1">
           <widget class="QGroupBox" name="values_group_box">
            <property name="title">
             <string/>
@@ -192,7 +212,7 @@ along with Panga.  If not, see <http://www.gnu.org/licenses/>.
            <layout class="QGridLayout" name="gridLayout_2"/>
           </widget>
          </item>
-         <item row="7" column="0">
+         <item row="8" column="0">
           <widget class="QLabel" name="n_monte_carlos_label">
            <property name="text">
             <string>Monte &amp;Carlos:</string>
@@ -202,7 +222,7 @@ along with Panga.  If not, see <http://www.gnu.org/licenses/>.
            </property>
           </widget>
          </item>
-         <item row="7" column="1">
+         <item row="8" column="1">
           <widget class="QSpinBox" name="n_monte_carlos_spin_box">
            <property name="maximum">
             <number>99999999</number>
@@ -222,14 +242,14 @@ along with Panga.  If not, see <http://www.gnu.org/licenses/>.
            </property>
           </widget>
          </item>
-         <item row="6" column="1">
+         <item row="7" column="1">
           <widget class="QCheckBox" name="constrained_fit_checkbox">
            <property name="text">
             <string/>
            </property>
           </widget>
          </item>
-         <item row="6" column="0">
+         <item row="7" column="0">
           <widget class="QLabel" name="constrained_fit_label">
            <property name="text">
             <string>Constrained Fit:</string>
@@ -329,6 +349,7 @@ along with Panga.  If not, see <http://www.gnu.org/licenses/>.
   <tabstop>ar_check_box</tabstop>
   <tabstop>kr_check_box</tabstop>
   <tabstop>xe_check_box</tabstop>
+  <tabstop>solubility_combo_box</tabstop>
   <tabstop>model_combo_box</tabstop>
   <tabstop>n_monte_carlos_spin_box</tabstop>
   <tabstop>concentrations_view</tabstop>

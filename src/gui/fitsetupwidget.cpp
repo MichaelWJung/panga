@@ -28,6 +28,7 @@
 #include <algorithm>
 
 #include "core/models/modelmanager.h"
+#include "core/models/ceqmethodmanager.h"
 
 #include "commons.h"
 #include "concentrationsheaderview.h"
@@ -49,6 +50,7 @@ FitSetupWidget::FitSetupWidget(QWidget* parent) :
 {
     ui->setupUi(this);
     InitializeModelBox();
+    InitializeSolubilityBox();
     SetupNobleGasCheckBoxes();
 
     FitSetup* fit_setup = new FitSetup(this);
@@ -95,10 +97,15 @@ void FitSetupWidget::SetFitSetup(FitSetup* fit_setup)
     LinkModelsAndViews();
 
     UpdateGasesInUse();
-    int model_index = ui->model_combo_box->findText(fit_setup_->GetModelName());
+    int model_index = ui->model_combo_box->findText(fit_setup_->GetModelName()); //WIP: Wofür ist dieser Teil gut?
     {
         SignalBlocker blocker(ui->model_combo_box);
         ui->model_combo_box->setCurrentIndex(model_index);
+    }
+    int ceqmethod_index = ui->solubility_combo_box->findText(fit_setup_->GetCEqMethodName()); //WIP: Wofür ist dieser Teil gut?
+    {
+        SignalBlocker blocker(ui->solubility_combo_box);
+        ui->solubility_combo_box->setCurrentIndex(ceqmethod_index);
     }
     UpdateParameters();
     UpdateConstrainedFitCheckbox();
@@ -140,6 +147,7 @@ void FitSetupWidget::MakeImmutable()
     ui->noble_gases_label->setText("Gases used:");
     ui->noble_gases_group_box->setEnabled(false);
 
+    ui->solubility_combo_box->setEnabled(false);
     ui->model_combo_box->setEnabled(false);
 
     ui->parameters_to_fit_label->setText("Parameters fitted:");
@@ -194,6 +202,34 @@ void FitSetupWidget::InitializeModelBox()
         ui->model_combo_box->addItem(QString::fromStdString(model));
 
     connect(ui->model_combo_box, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(SetActiveModel()));
+}
+
+void FitSetupWidget::InitializeSolubilityBox() //WIP: Mehr anzupassen?
+{
+    std::vector<std::string> available_models =
+            CEqMethodManager::Get().GetAvailableCEqMethods(); //WIP: Gleiches Problem wie davor!
+
+    if (available_models.empty()) //WIP: irgendwas anpassen??
+    {
+        //! \todo Irgendwie sicherstellen, dass die Fitknöpfe auch deaktiviert sind.
+//         ui->standard_fit_button->setEnabled(false);
+//         ui->ensemble_fit_button->setEnabled(false);
+        ui->parameters_group_box->setVisible(false);
+        ui->initials_group_box->setVisible(false);
+        ui->values_group_box->setVisible(false);
+        ui->parameters_to_fit_label->setVisible(false);
+        ui->initials_label->setVisible(false);
+        ui->values_label->setVisible(false);
+        QMessageBox::critical(this, "Error", "Could not find any models");
+        return;
+    }
+
+    ui->solubility_combo_box->clear();
+    for (const auto& model : available_models)
+        ui->solubility_combo_box->addItem(QString::fromStdString(model));
+
+    connect(ui->solubility_combo_box, SIGNAL(currentIndexChanged(int)),
             this, SLOT(SetActiveModel()));
 }
 
@@ -271,7 +307,7 @@ void FitSetupWidget::EmitNameChanged(QString name)
 
 void FitSetupWidget::SetActiveModel()
 {
-    fit_setup_->SetModel(ui->model_combo_box->currentText());
+    fit_setup_->SetModel(ui->model_combo_box->currentText(), ui->solubility_combo_box->currentText()); //WIP: SETMODEL
 }
 
 void FitSetupWidget::UpdateParameters()
