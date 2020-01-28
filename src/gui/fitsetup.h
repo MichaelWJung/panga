@@ -75,8 +75,9 @@ public:
                                             bool individually_configured);
 
     bool HasModel() const;
-    void SetModel(QString name);
+    void SetModel(QString name, QString ceqmethodname);
     QString GetModelName() const;
+    QString GetCEqMethodName() const;
     QString GetName() const;
     bool AreConstraintsApplied() const;
     
@@ -159,6 +160,9 @@ void FitSetup::save(Archive& ar, const unsigned version) const
 {
     std::string model = combined_model_->GetExcessAirModelName();
     ar << model;
+    std::string ceqmethod = combined_model_->GetCEqMethodName();
+    ar << ceqmethod;
+
     bool constraints_applied = AreConstraintsApplied();
     ar << constraints_applied;
     
@@ -177,7 +181,11 @@ void FitSetup::load(Archive& ar, const unsigned version)
 {              
     std::string model;
     ar >> model;
-    SetModel(QString::fromStdString(model));
+    std::string ceqmethod;
+    ar >> ceqmethod;
+    //WIP: Öffnen gespeicherter Ergebnisse aus voriger Version möglich machen
+
+    SetModel(QString::fromStdString(model), QString::fromStdString(ceqmethod)); 
     
     if (version >= 2)
     {

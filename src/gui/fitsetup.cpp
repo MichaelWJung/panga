@@ -27,6 +27,8 @@
 
 #include "core/fitting/defaultfitter.h"
 #include "core/models/modelmanager.h"
+#include "core/models/ceqmethodmanager.h"
+#include "core/models/weissmethodfactory.h" //WIP: Vorübergehend
 
 #include "chi2explorer.h"
 #include "commons.h"
@@ -59,10 +61,14 @@ FitSetup::FitSetup(QWidget* parent) :
     {
         SignalBlocker blocker(this);
         const auto& models = ModelManager::Get().GetAvailableModels();
+        const auto& ceqmethods = CEqMethodManager::Get().GetAvailableCEqMethods();
         std::string first_model = models.empty() ?
                                   std::string("") :
                                   models.front();
-        SetModel(QString::fromStdString(first_model));
+        std::string first_ceqmethod = ceqmethods.empty() ?
+                                  std::string("") :
+                                  ceqmethods.front();              
+        SetModel(QString::fromStdString(first_model), QString::fromStdString(first_ceqmethod)); //WIP: SETMODEL??
     }
     
     ConnectSignalsAndSlots();
@@ -356,14 +362,13 @@ void FitSetup::ResetModel()
     emit ModelChanged();
 }
 
-void FitSetup::SetModel(QString name)
+void FitSetup::SetModel(QString name, QString ceqmethodname) //WIP: SETMODEL
 {
-    if (name.isEmpty())
+    if (name.isEmpty() || ceqmethodname.isEmpty()) //WIP: Testen ob es Unterschied macht ob Jenkins verwendet wird!
     {
         ResetModel();
         return;
     }
-    
     ModelFactory* factory;
     try
     {
@@ -375,16 +380,28 @@ void FitSetup::SetModel(QString name)
         return;
     }
 
-    ModelFactory* ceqmethod_factory;
+    CEqMethodFactory* ceqmethod_factory;
     try
     {
-        factory = ModelManager::Get().GetModelFactory(name.toStdString());
+        ceqmethod_factory = CEqMethodManager::Get().GetCEqMethodFactory(ceqmethodname.toStdString()); //WIP Test
     }
-    catch (ModelManager::ModelNotFoundError)
+    catch (CEqMethodManager::CEqMethodNotFoundError) //WIP noch anpassen!!! Bedeutung
     {
         ResetModel();
         return;
-    }    
+    }
+    // std::string Test = ceqmethodname.toStdString(); 
+    // std::cout<<Test;
+    // CEqMethodFactory* ceqmethod_factory2;
+    // try
+    // {
+    //     ceqmethod_factory2 = CEqMethodManager::Get().GetCEqMethodFactory(ceqmethodname.toStdString()); //WIP: MACHT PROBLEME 
+    // }                                                                                                  //WIP: vllt schon in Fkt SetModel sobald es gebraucht wird
+    // catch (CEqMethodManager::CEqMethodNotFoundError)
+    // {
+    //     ResetModel();
+    //     return;
+    // }
 
     combined_model_ = CombinedModelFactory(factory, ceqmethod_factory).CreateModel();
     InitializeParameters();
@@ -397,7 +414,12 @@ QString FitSetup::GetModelName() const
         return "";
     return QString::fromStdString(combined_model_->GetExcessAirModelName());
 }
-
+QString FitSetup::GetCEqMethodName() const
+{
+    if (!HasModel())
+        return "";
+    return QString::fromStdString(combined_model_->GetCEqMethodName());
+}
 QString FitSetup::GetName() const
 {
     return name_;
