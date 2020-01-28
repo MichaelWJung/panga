@@ -177,9 +177,13 @@ double JenkinsMethod::CalculateConcentration(double p, double S, double T, GasTy
     return concentration;
 }
 
-//WIP: Molekulares Volumen der Gase eigentlich hier definieren?
+//WIP: Molekulares Volumen der Gase eigentlich hier definieren um die Koeffizienten direkt hier zu berechnen?
+
 //Die Reihenfolge der Gase muss dem enum in "gas.h" entsprechen.
-//Die Konstanten wurden umgerechnet, um das Teilen durch 100 zu vermeiden.
+//Die Konstanten wurden auf zwei Weisen umgerechnet:
+//das Teilen durch 100 wurde eingerechnet
+//und die Umrechnung von mol/kg nach ccSTP/kg ist in t1 integriert (molare Volumen aus Porcelli, Noble Gases in Geochemistry and Cosmochemistry).
+//(In CalculateConcentration wird durch das Teilen durch 1000 dann mit ccSTP/g gerechnet.)
 const std::vector<double> JenkinsMethod::t1 = boost::assign::list_of( -816.304426860976) //Helium
                                                                     (-1309.33954018636 ) //Neon
                                                                     (-1048.80572892443 ) //Argon
