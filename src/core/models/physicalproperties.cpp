@@ -59,6 +59,8 @@ const std::map<GasType, std::pair<double, double>>
 // const double PhysicalProperties::R = 0.082058;
 const double PhysicalProperties::R = 8.3143;
 
+//Benson and Krause 1980; Kipfer et al. 2002
+//Coefficients for the calculation of 3He/4He
 const double PhysicalProperties::r1_ = -0.0299645;
 const double PhysicalProperties::r2_ = 19.8715;
 const double PhysicalProperties::r3_ = -1833.92;
