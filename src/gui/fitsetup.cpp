@@ -28,7 +28,6 @@
 #include "core/fitting/defaultfitter.h"
 #include "core/models/modelmanager.h"
 #include "core/models/ceqmethodmanager.h"
-#include "core/models/weissmethodfactory.h" //WIP: Vorübergehend
 
 #include "chi2explorer.h"
 #include "commons.h"
@@ -68,7 +67,7 @@ FitSetup::FitSetup(QWidget* parent) :
         std::string first_ceqmethod = ceqmethods.empty() ?
                                   std::string("") :
                                   ceqmethods.front();              
-        SetModel(QString::fromStdString(first_model), QString::fromStdString(first_ceqmethod)); //WIP: SETMODEL??
+        SetModel(QString::fromStdString(first_model), QString::fromStdString(first_ceqmethod));
     }
     
     ConnectSignalsAndSlots();
@@ -362,9 +361,9 @@ void FitSetup::ResetModel()
     emit ModelChanged();
 }
 
-void FitSetup::SetModel(QString name, QString ceqmethodname) //WIP: SETMODEL
+void FitSetup::SetModel(QString name, QString ceqmethodname)
 {
-    if (name.isEmpty() || ceqmethodname.isEmpty()) //WIP: Testen ob es Unterschied macht ob Jenkins verwendet wird!
+    if (name.isEmpty() || ceqmethodname.isEmpty())
     {
         ResetModel();
         return;
@@ -385,23 +384,11 @@ void FitSetup::SetModel(QString name, QString ceqmethodname) //WIP: SETMODEL
     {
         ceqmethod_factory = CEqMethodManager::Get().GetCEqMethodFactory(ceqmethodname.toStdString()); //WIP Test
     }
-    catch (CEqMethodManager::CEqMethodNotFoundError) //WIP noch anpassen!!! Bedeutung
+    catch (CEqMethodManager::CEqMethodNotFoundError) //WIP noch anpassen?
     {
         ResetModel();
         return;
-    }
-    // std::string Test = ceqmethodname.toStdString(); 
-    // std::cout<<Test;
-    // CEqMethodFactory* ceqmethod_factory2;
-    // try
-    // {
-    //     ceqmethod_factory2 = CEqMethodManager::Get().GetCEqMethodFactory(ceqmethodname.toStdString()); //WIP: MACHT PROBLEME 
-    // }                                                                                                  //WIP: vllt schon in Fkt SetModel sobald es gebraucht wird
-    // catch (CEqMethodManager::CEqMethodNotFoundError)
-    // {
-    //     ResetModel();
-    //     return;
-    // }
+    }    
 
     combined_model_ = CombinedModelFactory(factory, ceqmethod_factory).CreateModel();
     InitializeParameters();
