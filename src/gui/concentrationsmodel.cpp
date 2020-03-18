@@ -123,7 +123,7 @@ void ConcentrationsModel::LoadSamplesIntoModel(QTextStream& stream)
     if (samples.empty())
     {
         QMessageBox::warning(nullptr, APPLICATION_NAME,
-                             "Error: Invalid input format.");
+                             "Error: Invalid input format."); //WIP
         return;
     }
     if (ContainsDuplicateSampleNames(samples)) 
@@ -151,7 +151,7 @@ void ConcentrationsModel::LoadSamplesIntoModel(QTextStream& stream)
 Sample ConcentrationsModel::CreateSampleFromLine(const QString& line) const
 {
     QStringList strings;
-    if (!((strings = line.split(',' )).size() == 11 ||
+    if (!((strings = line.split(',' )).size() == 11 || //WIP-ev1
           (strings = line.split('\t')).size() == 11))
         throw std::invalid_argument("A line must consist of the sample name "
                                     "and the following concentrations, all "
@@ -162,7 +162,7 @@ Sample ConcentrationsModel::CreateSampleFromLine(const QString& line) const
     std::string sample_name = strings.takeFirst().toStdString();
     SampleConcentrations concentrations;
     
-    for (unsigned i = 0; i < 5; ++i)
+    for (unsigned i = 0; i < 5; ++i) //WIP-ev1
     {
         bool value_ok = true;
         bool error_ok = true;

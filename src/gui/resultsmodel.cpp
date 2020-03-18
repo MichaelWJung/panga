@@ -99,15 +99,15 @@ const QList<ExtendedColumnType> ResultsModel::GetAvailableColumnTypes() const //
         cols.push_back({ColumnType::MODEL_CONCENTRATION_ERROR, i});
     }
 
-    for (unsigned i = 0; i < 5; ++i)
+    for (unsigned i = 0; i < 5; ++i) //WIPev1
     {
         cols.push_back({ColumnType::MEASURED_CONCENTRATION,       i});
         cols.push_back({ColumnType::MEASURED_CONCENTRATION_ERROR, i});
     }
 
     cols.push_back({ColumnType::CHI, 0});
-    cols.push_back({ColumnType::DELTA_NEON,         1}); //WIP: 1 wird nicht verwendet
-    cols.push_back({ColumnType::DELTA_NEON_ERROR,   1});
+    cols.push_back({ColumnType::DELTA_NEON,         0});
+    cols.push_back({ColumnType::DELTA_NEON_ERROR,   0});
     cols.push_back({ColumnType::RAD_HE,             0});
     cols.push_back({ColumnType::RAD_HE_ERROR,       0});
     cols.push_back({ColumnType::RAD_HE3,            0});

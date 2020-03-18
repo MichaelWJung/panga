@@ -122,7 +122,7 @@ std::shared_ptr<FitResults> LevenbergMarquardtFitter::fit(
         {
             Eigen::covar(lm.fjac, lm.permutation.indices(),
                          std::numeric_limits<double>::epsilon());
-            results->covariance_matrix =
+            results->covariance_matrix = //WIP1: Sind die für alle Parameter drin?
                     lm.fjac.topLeftCorner(n_params, n_params);
             results->residuals = lm.fvec;
         }
@@ -133,7 +133,7 @@ std::shared_ptr<FitResults> LevenbergMarquardtFitter::fit(
         }
         
         results->best_estimate = x;
-        results->deviations = results->covariance_matrix.diagonal().cwiseSqrt();
+        results->deviations = results->covariance_matrix.diagonal().cwiseSqrt(); //WIP1: Sind die für alle Parameter drin?
         results->chi_square =
                 results->residuals.cwiseProduct(results->residuals).sum();
         results->degrees_of_freedom = n_values - n_params;
