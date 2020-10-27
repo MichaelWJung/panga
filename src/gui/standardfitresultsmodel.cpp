@@ -133,7 +133,7 @@ StandardFitResultsModel::GetResultsVector() const
     return results_;
 }
 
-bool StandardFitResultsModel::IsParameterInNormalRange( //WIPev2
+bool StandardFitResultsModel::IsParameterInNormalRange(
         const FitResults& results,
         const ExtendedColumnType& column_type) const //WIP: 0 Column Type
 {

@@ -16,7 +16,7 @@
 // along with Panga.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#ifndef CEQMETHODFACTORY_H //WIP: Was ist das?
+#ifndef CEQMETHODFACTORY_H
 #define CEQMETHODFACTORY_H
 
 #include <memory>

@@ -38,7 +38,7 @@ class FitResults
 
 public:
 
-    FitResults() : chi_square(-1.), n_iterations(0) {} //WIP???
+    FitResults() : chi_square(-1.), n_iterations(0) {}
 
     virtual ~FitResults() {}
 
