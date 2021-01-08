@@ -130,6 +130,9 @@ public:
     //! Ableitung von Req nach S.
     static double CalcReqDerivedByS(double t, double s);
 
+    //! Molvolumina der Edelgase zur Umrechnung.
+    static double GetMolarVolume(GasType gas);
+
 //     //! Gaskonstante in atm*l/(mol*K).
 //     static const double R;
 
@@ -184,6 +187,9 @@ private:
 
     //! Molvolumina der Edelgase, berechnet mit CalculateMolarVolumes.
     static const std::map<GasType, double> molar_volumes_;
+    
+    //! Molvolumina der Edelgase, zum Vergleichen (WIP).
+    static const std::map<GasType, double> molar_volumes_new;
 
     //! Volumenanteile der Edelgase in trockener Luft.
     static const std::map<GasType, double> dry_air_volume_fractions_;

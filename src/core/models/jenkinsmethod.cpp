@@ -69,7 +69,7 @@ void JenkinsMethod::CalculateDerivatives(
     GasType gas_for_calculations = gas != Gas::HE3 ? gas : Gas::HE;
     
     const double exponential =
-            CalcJenkinsExpFunction(x->T(), x->S(), gas_for_calculations) / 1000.;
+            CalcJenkinsExpFunction(x->T(), x->S(), gas_for_calculations) * PhysicalProperties::GetMolarVolume(gas) / 1000.;
 
     DERIVATIVE_LOOP(parameter, derivative, derivatives)
     {
@@ -168,8 +168,9 @@ double JenkinsMethod::CalculateConcentration(double p, double S, double T, GasTy
     double concentration =
             CalcJenkinsExpFunction(T,
                                  S,
-                                 gas != Gas::HE3 ? gas : Gas::HE) *
-            p_dry / (1 - p_w) / 1000;
+                                 gas != Gas::HE3 ? gas : Gas::HE) * //WIP: check HE3
+            PhysicalProperties::GetMolarVolume(gas) / 1000. * //Umrechnung von mol/kg nach ccSTP/g
+            p_dry / (1 - p_w);
 
     if (gas == Gas::HE3)
         return concentration * PhysicalProperties::CalcReq(T, S);
@@ -177,18 +178,14 @@ double JenkinsMethod::CalculateConcentration(double p, double S, double T, GasTy
     return concentration;
 }
 
-//WIP: Molekulares Volumen der Gase eigentlich hier definieren um die Koeffizienten direkt hier zu berechnen?
 
 //Die Reihenfolge der Gase muss dem enum in "gas.h" entsprechen.
-//Die Konstanten wurden auf zwei Weisen umgerechnet:
-//das Teilen durch 100 wurde eingerechnet
-//und die Umrechnung von mol/kg nach ccSTP/kg ist in t1 integriert (molare Volumen aus Porcelli, Noble Gases in Geochemistry and Cosmochemistry).
-//(In CalculateConcentration wird durch das Teilen durch 1000 dann mit ccSTP/g gerechnet.)
-const std::vector<double> JenkinsMethod::t1 = boost::assign::list_of( -816.304426860976) //Helium
-                                                                    (-1309.33954018636 ) //Neon
-                                                                    (-1048.80572892443 ) //Argon
-                                                                    ( -435.723435738912) //Krypton
-                                                                    ( -940.331844325884);//Xenon
+//Das Teilen durch 100 wurde in die Konstanten t1, t2, t4, s2, s3 eingerechnet. (WIP: change)
+const std::vector<double> JenkinsMethod::t1 = boost::assign::list_of( -826.322866779936) //Helium
+                                                                    (-1319.35732470527 ) //Neon
+                                                                    (-1058.82194230202 ) //Argon
+                                                                    ( -445.738071028788) //Krypton
+                                                                    ( -950.343306973085);//Xenon
 
 const std::vector<double> JenkinsMethod::t2 = boost::assign::list_of(21759.91          ) //Helium
                                                                     (35262.01          ) //Neon

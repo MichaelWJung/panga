@@ -35,6 +35,19 @@ const std::map<GasType, std::vector<double> > PhysicalProperties::virial_coeffic
 const std::map<GasType, double> PhysicalProperties::molar_volumes_ =
     PhysicalProperties::CalculateMolarVolumes(PhysicalProperties::virial_coefficient_parameters_);
 
+// (molare Volumen aus Porcelli, Noble Gases in Geochemistry and Cosmochemistry)
+const std::map<GasType, double> PhysicalProperties::molar_volumes_new = { 
+    {Gas::HE, 22436.4}, // PangaMA: 22436.4, Matlab: 22425.9
+    {Gas::NE, 22421.7}, // PangaMA: 22421.7, Matlab: 22424.9
+    {Gas::AR, 22386.5}, // PangaMA: 22386.5, Matlab: 22392.6
+    {Gas::KR, 22351.2}, // PangaMA: 22351.2, Matlab: 22352.9
+    {Gas::XE, 22280.4}, // PangaMA: 22280.4, Matlab: 22257.0
+};
+double PhysicalProperties::GetMolarVolume(GasType gas)
+{
+    return PhysicalProperties::molar_volumes_new.find(gas)->second;
+}
+
 const double PhysicalProperties::molar_volume_ideal_gas_ = 22414.1;
 
 //! \todo Eine Lösung finden für das doppelte definieren des Xenon-Werts.
