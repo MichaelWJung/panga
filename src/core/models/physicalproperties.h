@@ -130,7 +130,11 @@ public:
     //! Ableitung von Req nach S.
     static double CalcReqDerivedByS(double t, double s);
 
-    //! Molvolumina der Edelgase zur Umrechnung.
+    //! Molvolumina der Edelgase zur Umrechnung von Jenkins und Clever Löslichkeiten.
+    /*!
+     * based on Dymond and Smith, 1980
+     * in ccSTP/mol
+     */
     static double GetMolarVolume(GasType gas);
 
 //     //! Gaskonstante in atm*l/(mol*K).
@@ -188,7 +192,7 @@ private:
     //! Molvolumina der Edelgase, berechnet mit CalculateMolarVolumes.
     static const std::map<GasType, double> molar_volumes_;
     
-    //! Molvolumina der Edelgase, zum Vergleichen (WIP).
+    //! Molvolumina der Edelgase, basierend auf Dymond and Smith (1980).
     static const std::map<GasType, double> molar_volumes_new;
 
     //! Volumenanteile der Edelgase in trockener Luft.
