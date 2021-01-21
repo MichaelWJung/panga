@@ -40,9 +40,18 @@ public:
       \return Sättigungsdampfdruck in atm.
       */
     static double CalcSaturationVaporPressure_Gill(double T_c);
+    //! Berechnet den Sättigungsdampfdruck von Wasser.
+    /*!
+      Berechnung nach Dickson 2007, Guide to Best Practices for Ocean CO2 Measurements. 
+      Basierend auf einem Skript von Roberta Hamme (vpress Version 2.0 : 27 October 2012).
+      */
+    static double CalcSaturationVaporPressure_Dickson(double T_c, double S);
 
     //! Berechnet die Ableitung des \ref CalcSaturationVaporPressure_Gill "Sättigungsdampfdrucks" von Wasser.
     static double CalcSaturationVaporPressureDerivative_Gill(double T_c);
+    //! Berechnet die Ableitungen des \ref CalcSaturationVaporPressure_Dickson "Sättigungsdampfdrucks" von Wasser.
+    static double CalcSaturationVaporPressureDerivedByT_Dickson(double T_c, double S);
+    static double CalcSaturationVaporPressureDerivedByS_Dickson(double T_c, double S);
 
     //! Berechnet die Dichte von Wasser für die gegebenen Bedingungen.
     /*!

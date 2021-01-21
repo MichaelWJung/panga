@@ -89,11 +89,60 @@ double PhysicalProperties::CalcSaturationVaporPressure_Gill(double T_c)
     return std::exp( (c1_ + c2_ * T_c) / (1 + c3_ * T_c) )
             / 1013.25;
 }
+double PhysicalProperties::CalcSaturationVaporPressure_Dickson(double T_c, double S)
+{
+    //Calculate temperature in Kelvin and modified temperature for Chebyshev polynomial
+    double temp_K = T_c+273.15;
+    double temp_mod = 1-temp_K/647.096;
+
+    //Calculate value of Wagner polynomial
+    double Wagner = -7.85951783*temp_mod +1.84408259*pow(temp_mod, 1.5) -11.7866497*pow(temp_mod, 3) +22.6807411*pow(temp_mod, 3.5) -15.9618719*pow(temp_mod, 4) +1.80122502*pow(temp_mod, 7.5);
+
+    //Vapor pressure of pure water in kiloPascals and mm of Hg
+    double vapor_0sal_kPa = exp(Wagner * 647.096 / temp_K) * 22.064 * 1000;
+
+    //Correct vapor pressure for salinity
+    double molality = 31.998 * S /(1e3-1.005*S);
+    double osmotic_coef = 0.90799 -0.08992*(0.5*molality) +0.18458*pow(0.5*molality,2) -0.07395*pow(0.5*molality,3) -0.00221*pow(0.5*molality,4);
+    double vapor_press_kPa = vapor_0sal_kPa * exp(-0.018 * osmotic_coef * molality);
+
+    //Convert to atm
+    double vapor_press_atm = vapor_press_kPa/101.32501;
+
+    // double oldpressure = CalcSaturationVaporPressure(T_c);
+    // printf("%.20g\n", vapor_press_atm);
+    // printf("%.20g\n", oldpressure);
+
+    return vapor_press_atm;
+}
 
 double PhysicalProperties::CalcSaturationVaporPressureDerivative_Gill(double T_c)
 {
     return CalcSaturationVaporPressure_Gill(T_c) *
             (c2_ - c1_ * c3_) / std::pow(1 + c3_ * T_c, 2.);
+}
+double PhysicalProperties::CalcSaturationVaporPressureDerivedByT_Dickson(double T_c, double S)
+{
+    //Calculate temperature in Kelvin and modified temperature for Chebyshev polynomial
+    double temp_K = T_c+273.15;
+    double temp_mod = 1-temp_K/647.096;
+
+    //Calculate value of Wagner polynomial
+    double Wagner = -7.85951783*temp_mod +1.84408259*pow(temp_mod, 1.5) -11.7866497*pow(temp_mod, 3) +22.6807411*pow(temp_mod, 3.5) -15.9618719*pow(temp_mod, 4) +1.80122502*pow(temp_mod, 7.5);
+    double WagnerDerivedByTmod = -7.85951783+ 1.5* 1.84408259*pow(temp_mod, 0.5) - 3* 11.7866497*pow(temp_mod, 2) + 3.5* 22.6807411*pow(temp_mod, 2.5) - 4* 15.9618719*pow(temp_mod, 3) + 7.5* 1.80122502*pow(temp_mod, 6.5);
+    double WagnerDerivedByT = 1/647.096 * WagnerDerivedByTmod;
+    return CalcSaturationVaporPressure_Dickson(T_c, S)* (WagnerDerivedByT * 647.096 / temp_K - Wagner * 647.096 / pow(T_c,2));
+}
+double PhysicalProperties::CalcSaturationVaporPressureDerivedByS_Dickson(double T_c, double S)
+{
+    //Correct vapor pressure for salinity
+    double molality = 31.998 * S /(1e3 - 1.005*S);
+    double molality_DerivedByS = 31.998 /(1e3 - 1.005*S) + 31.998 * S / pow(1e3 - 1.005*S, 2) * 1.005;
+    double osmotic_coef = 0.90799 -0.08992*(0.5*molality) +0.18458*pow(0.5*molality,2) -0.07395*pow(0.5*molality,3) -0.00221*pow(0.5*molality,4);
+    double osmotic_coef_DerivedByMolality = -0.08992*(0.5) + 2*0.5* 0.18458*pow(0.5*molality,1) - 3*0.5* 0.07395*pow(0.5*molality,2) - 4*0.5* 0.00221*pow(0.5*molality,3);
+    double osmotic_coef_DerivedByS = molality_DerivedByS * osmotic_coef_DerivedByMolality;
+
+    return CalcSaturationVaporPressure_Dickson(T_c, S)* (-0.018 * (osmotic_coef_DerivedByS * molality + osmotic_coef * molality_DerivedByS ));
 }
 
 double PhysicalProperties::CalcWaterDensity(double p, double S, double T_c)
