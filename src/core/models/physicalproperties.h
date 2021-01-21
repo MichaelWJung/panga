@@ -39,10 +39,10 @@ public:
       \param T_c Temperatur in °C.
       \return Sättigungsdampfdruck in atm.
       */
-    static double CalcSaturationVaporPressure(double T_c);
+    static double CalcSaturationVaporPressure_Gill(double T_c);
 
-    //! Berechnet die Ableitung des \ref CalcSaturationVaporPressure "Sättigungsdampfdrucks" von Wasser.
-    static double CalcSaturationVaporPressureDerivative(double T_c);
+    //! Berechnet die Ableitung des \ref CalcSaturationVaporPressure_Gill "Sättigungsdampfdrucks" von Wasser.
+    static double CalcSaturationVaporPressureDerivative_Gill(double T_c);
 
     //! Berechnet die Dichte von Wasser für die gegebenen Bedingungen.
     /*!

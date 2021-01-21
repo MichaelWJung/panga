@@ -84,15 +84,15 @@ const double PhysicalProperties::r3_ = -1833.92;
 const double PhysicalProperties::r4_ = 0.000464;
 const double PhysicalProperties::r5_ = 1.384;
 
-double PhysicalProperties::CalcSaturationVaporPressure(double T_c)
+double PhysicalProperties::CalcSaturationVaporPressure_Gill(double T_c)
 {
     return std::exp( (c1_ + c2_ * T_c) / (1 + c3_ * T_c) )
             / 1013.25;
 }
 
-double PhysicalProperties::CalcSaturationVaporPressureDerivative(double T_c)
+double PhysicalProperties::CalcSaturationVaporPressureDerivative_Gill(double T_c)
 {
-    return CalcSaturationVaporPressure(T_c) *
+    return CalcSaturationVaporPressure_Gill(T_c) *
             (c2_ - c1_ * c3_) / std::pow(1 + c3_ * T_c, 2.);
 }
 

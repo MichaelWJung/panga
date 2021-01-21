@@ -51,7 +51,7 @@
   \f$X_i\f$: \ref PhysicalProperties::CalcXeMoleFractionSolubility "Mole fraction solubility des Gases"
     (einheitenlos).\n
   \f$M_{H_2O}\f$: Molmasse von Wasser.\n
-  \f$e_w\f$: \ref PhysicalProperties::CalcSaturationVaporPressure "Sättigungsdampfdruck des Wassers".\n
+  \f$e_w\f$: \ref PhysicalProperties::CalcSaturationVaporPressure_Gill "Sättigungsdampfdruck des Wassers".\n
   \f$z_i\f$: Volumen-Anteil des Gases in trockener Luft.\n
   \f$\rho(T,S)\f$: \ref PhysicalProperties::CalcWaterDensity "Dichte des Wassers".\n
   \f$V_i\f$: Molvolumen des Gases.\n

@@ -65,7 +65,7 @@ void WeissMethod::CalculateDerivatives(
     const double t_k = x->T() + 273.15;
 
     // Sättigungsdampfdruck.
-    const double p_w = PhysicalProperties::CalcSaturationVaporPressure(x->T());
+    const double p_w = PhysicalProperties::CalcSaturationVaporPressure_Gill(x->T());
 
     // (p - pw) / (1 - pw)
     const double frac = (x->p() - p_w) / (1. - p_w);
@@ -108,7 +108,7 @@ void WeissMethod::CalculateDerivatives(
                            +
 
                            (x->p() - 1.) / std::pow(1. - p_w, 2.) * //Ableitung von "frac"
-                           PhysicalProperties::CalcSaturationVaporPressureDerivative(x->T()));
+                           PhysicalProperties::CalcSaturationVaporPressureDerivative_Gill(x->T()));
             break;
 
         case Weiss::OTHER:
@@ -166,7 +166,7 @@ double WeissMethod::CalculateConcentration(double p, double S, double T, GasType
                                  " Weiss method.");
 
     // Sättigungsdampfdruck in atm.
-    const double p_w = PhysicalProperties::CalcSaturationVaporPressure(T);
+    const double p_w = PhysicalProperties::CalcSaturationVaporPressure_Gill(T);
 
     // Partialdruck der trockenen Luft.
     const double p_dry = p - p_w;
