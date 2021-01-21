@@ -130,7 +130,7 @@ double CleverMethod::CalculateConcentration(double p, double S, double T, GasTyp
            PhysicalProperties::GetMolarVolume(gas) *
 
             // Partialdruck der trockenen Luft                      * Xe-Anteil
-           (p - PhysicalProperties::CalcSaturationVaporPressure_Gill(T)) * z_ *
+           (p - PhysicalProperties::CalcSaturationVaporPressure_Dickson(T, S)) * z_ *
 
            PhysicalProperties::CalcWaterDensity(1., 0., T) /
            PhysicalProperties::CalcWaterDensity(1., S , T) *

@@ -61,7 +61,7 @@ void JenkinsMethod::CalculateDerivatives(
     const double t_k = ( x->T() + 273.15 )/100;
 
     // Sättigungsdampfdruck.
-    const double p_w = PhysicalProperties::CalcSaturationVaporPressure_Gill(x->T());
+    const double p_w = PhysicalProperties::CalcSaturationVaporPressure_Dickson(x->T(), x->S());
 
     // (p - pw) / (1 - pw)
     const double frac = (x->p() - p_w) / (1. - p_w);
@@ -86,7 +86,13 @@ void JenkinsMethod::CalculateDerivatives(
                           (s1[gas_for_calculations] +
                            s2[gas_for_calculations] * t_k +
                            s3[gas_for_calculations] * t_k * t_k +
-                           s4[gas_for_calculations] * 2* x->S() );
+                           s4[gas_for_calculations] * 2* x->S() )
+
+                           + //Verwendung von VaporPressure_Dickson mit Salinity Abhängigkeit:
+                           exponential * 
+                           (x->p() - 1.) / std::pow(1. - p_w, 2.) * //Ableitung von "frac"
+                           PhysicalProperties::CalcSaturationVaporPressureDerivedByS_Dickson(x->T(), x->S())
+                           ;
             break;
 
         case Jenkins::T:
@@ -105,7 +111,8 @@ void JenkinsMethod::CalculateDerivatives(
                            +
 
                            (x->p() - 1.) / std::pow(1. - p_w, 2.) * //Ableitung von "frac"
-                           PhysicalProperties::CalcSaturationVaporPressureDerivative_Gill(x->T()));
+                           PhysicalProperties::CalcSaturationVaporPressureDerivedByT_Dickson(x->T(), x->S())
+                           );
             break;
 
         case Jenkins::OTHER:
@@ -160,7 +167,7 @@ double JenkinsMethod::CalcJenkinsExpFunction(double t, double s, GasType gas)
 double JenkinsMethod::CalculateConcentration(double p, double S, double T, GasType gas)
 {
     // Sättigungsdampfdruck in atm.
-    const double p_w = PhysicalProperties::CalcSaturationVaporPressure_Gill(T);
+    const double p_w = PhysicalProperties::CalcSaturationVaporPressure_Dickson(T, S);
 
     // Partialdruck der trockenen Luft.
     const double p_dry = p - p_w;
