@@ -37,6 +37,7 @@ class CEqCalculationMethod
 {
 
 public:
+    CEqCalculationMethod(){}
 
     //! Destruktor.
     virtual ~CEqCalculationMethod() {}
