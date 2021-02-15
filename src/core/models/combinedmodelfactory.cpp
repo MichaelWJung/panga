@@ -30,6 +30,8 @@ std::shared_ptr<CombinedModel> CombinedModelFactory::CreateModel() const
 {
     if (!factory_)
         throw std::runtime_error("CombinedModelFactory: No factory set.");
+    if (!ceqmethod_factory_)
+        throw std::runtime_error("CombinedModelFactory: No ceqmethod_factory set.");
     return std::make_shared<CombinedModel>(factory_, ceqmethod_factory_);
 }
 

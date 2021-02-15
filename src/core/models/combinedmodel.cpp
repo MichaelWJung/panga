@@ -25,7 +25,7 @@ CombinedModel::CombinedModel(ModelFactory* factory, CEqMethodFactory* ceqmethod_
      ceqmethod_factory_(ceqmethod_factory),
      manager_(std::make_shared<ParameterManager>()),
     model_  (factory->CreateModel(manager_)),
-     ceqmethod_ (ceqmethod_factory_->CreateCEqMethod(manager_)),
+     ceqmethod_ (ceqmethod_factory->CreateCEqMethod(manager_)),
      clever_ (std::make_shared<CleverMethod>(manager_)),
     model_accessor_ ( model_->GetParameterAccessor()),
      ceqmethod_accessor_ (ceqmethod_->GetParameterAccessor()),
