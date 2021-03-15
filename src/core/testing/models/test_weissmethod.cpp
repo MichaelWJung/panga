@@ -63,7 +63,7 @@ BOOST_FIXTURE_TEST_SUITE(WeissMethod_tests, Fixture)
 
 BOOST_AUTO_TEST_CASE(CalculateConcentration)
 {
-    BOOST_CHECK_THROW(method.CalculateConcentration(accessor, Gas::XE), std::runtime_error);
+    BOOST_CHECK_THROW(method.CalculateConcentration(accessor, Gas::XE), std::runtime_error); // prüfen ob Xe bei Weiss rausgenommen
 
     T = 0;
     S = 1;
