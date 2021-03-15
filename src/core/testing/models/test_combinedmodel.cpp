@@ -25,6 +25,7 @@
 
 #include "core/models/clevermethod.h"
 #include "core/models/weissmethod.h"
+#include "core/models/weissmethodfactory.h"
 #include "core/models/combinedmodel.h"
 
 #include "testmodel.h"
@@ -53,7 +54,7 @@ BOOST_AUTO_TEST_CASE(ParameterNotFound)
 BOOST_AUTO_TEST_CASE(ConcentrationsAndDerivatives)
 {
     ModelFactory* factory(new TestFactory());
-    CEqMethodFactory* ceqmethod_factory(new TestCEqFactory());
+    CEqMethodFactory* ceqmethod_factory(new WeissMethodFactory()); // Use Weiss to test concentrations and derivatives
     CombinedModel model(factory, ceqmethod_factory);
 
     std::vector<int> indices;
