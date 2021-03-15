@@ -23,9 +23,11 @@
 #include <iostream>
 
 #include "mainwindow.h"
+#include "../core/testing/models/manualtest_models.cpp"
 
 int main(int argc, char* argv[])
-{
+{   
+    manualtesting::test();
     QApplication app(argc, argv);
     std::locale::global(std::locale::classic());
     QLocale::setDefault(QLocale::c());
