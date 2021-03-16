@@ -11,6 +11,7 @@
 #include "core/models/parametermanager.h"
 #include "core/models/jenkinsmethod.h"
 #include "core/models/weissmethod.h"
+#include "core/models/physicalproperties.cpp"
 
 namespace manualtesting
 {
@@ -33,7 +34,7 @@ namespace manualtesting
         }
 
         std::shared_ptr<ParameterManager> manager;
-        WeissMethod method;
+        JenkinsMethod method; //Change tested method
         std::shared_ptr<ParameterAccessor> accessor;
         Eigen::VectorXd vec;
 
@@ -41,9 +42,7 @@ namespace manualtesting
         double& S;
         double& p;
     };
-
-
-    void test_ceqmethod(){
+    void test_derivatives_ceqmethod(){
         Fixture fxt;
         fxt.T = 0;
         fxt.S = 1;
@@ -51,64 +50,106 @@ namespace manualtesting
 
         // Stuff for the Derivatives
         std::shared_ptr<DerivativeCollector> dcol(fxt.method.GetDerivativeCollector());
-        Eigen::RowVectorXd derivatives(5);
+        Eigen::RowVectorXd derivatives(3);
         std::vector<int> indices;
-        indices.push_back(17);
+        indices.push_back(fxt.manager->GetParameterIndex("p")); //Achtung Reihenfolge muss zu NOBLE_PARAMETER_NAMES passen?!
         indices.push_back(fxt.manager->GetParameterIndex("S"));
-        indices.push_back(fxt.manager->GetParameterIndex("p"));
-        indices.push_back(42);
         indices.push_back(fxt.manager->GetParameterIndex("T"));
         dcol->SetDerivativesAndResultsVector(derivatives, indices);
 
+        GasType usedgas = Gas::HE3; // WIP: loop different gases
 
-        // Test loops
-        // WIP: loop über gase
         double xi;
-        std::cout << "T" << std::endl;
+        std::cout << "Weiss/Jenkins T (Gas " << usedgas << ")" << std::endl;  //Param
         for(xi=0; xi<35; xi++) {
-            fxt.T=xi;
-            printf("%.3g ",fxt.T );
-            Gas::GasType gas_ = Gas::StringToGasType("xe");
-            fxt.method.CalculateDerivatives(fxt.accessor, dcol, Gas::HE); 
-            double c1 = fxt.method.CalculateConcentration(fxt.accessor, Gas::HE);
-            double b = 1E-08;
-            fxt.T=xi+b;
-            double c2 = fxt.method.CalculateConcentration(fxt.accessor, Gas::HE);
+            double factor = 1.;
+            fxt.T=xi*factor;   //Param
+            printf("%.3g ",fxt.T ); //Param
+            fxt.method.CalculateDerivatives(fxt.accessor, dcol, usedgas); 
+            double c1 = fxt.method.CalculateConcentration(fxt.accessor, usedgas);
+
+            double b = 1E-06;
+            fxt.T=xi*factor+b; //Param
+            double c2 = fxt.method.CalculateConcentration(fxt.accessor, usedgas);
+
             double a = c2-c1;
             printf("%.20g ", a/b );
-            printf("%.20g", derivatives[4/*T*/]);
+            printf("%.20g", derivatives[fxt.manager->GetParameterIndex("T")]);   //Param
             std::cout << std::endl;
         }
-        std::cout << "p" << std::endl;
+        std::cout << "Weiss/Jenkins p (Gas " << usedgas << ")" << std::endl; //Param
         for(xi=0; xi<100; xi++) {
-            fxt.p=xi/100;
-            printf("%.3g ",fxt.T );
-            fxt.method.CalculateDerivatives(fxt.accessor, dcol, Gas::HE); 
-            double c1 = fxt.method.CalculateConcentration(fxt.accessor, Gas::HE);
+            double factor = 1/100.;
+            fxt.p=xi*factor;    //Param
+            printf("%.3g ",fxt.p ); //Param
+            fxt.method.CalculateDerivatives(fxt.accessor, dcol, usedgas); 
+            double c1 = fxt.method.CalculateConcentration(fxt.accessor, usedgas);
+
             double b = 1E-08;
-            fxt.p=xi/100+b;
-            double c2 = fxt.method.CalculateConcentration(fxt.accessor, Gas::HE);
+            fxt.p=xi*factor+b;  //Param
+            double c2 = fxt.method.CalculateConcentration(fxt.accessor, usedgas);
+
             double a = c2-c1;
             printf("%.20g ", a/b );
-            printf("%.20g", derivatives[2/*p*/]);
+            printf("%.20g", derivatives[fxt.manager->GetParameterIndex("p")]);   //Param
             std::cout << std::endl;
         }
-        std::cout << "p" << std::endl;
+        std::cout << "Weiss/Jenkins S (Gas " << usedgas << ")" << std::endl; //Param
         for(xi=0; xi<35; xi++) {
-            fxt.S=xi;
-            printf("%.3g ",fxt.T );
-            fxt.method.CalculateDerivatives(fxt.accessor, dcol, Gas::HE); 
-            double c1 = fxt.method.CalculateConcentration(fxt.accessor, Gas::HE);
+            double factor = 1.;
+            fxt.S=xi*factor;   //Param
+            printf("%.5g ",fxt.S ); //Param
+            fxt.method.CalculateDerivatives(fxt.accessor, dcol, usedgas); 
+            double c1 = fxt.method.CalculateConcentration(fxt.accessor, usedgas);
+
             double b = 1E-08;
-            fxt.S=xi+b;
-            double c2 = fxt.method.CalculateConcentration(fxt.accessor, Gas::HE);
+            fxt.S=xi+b; //Param
+            double c2 = fxt.method.CalculateConcentration(fxt.accessor, usedgas);
+
             double a = c2-c1;
             printf("%.20g ", a/b );
-            printf("%.20g", derivatives[1/*S*/]);
+            printf("%.20g", derivatives[fxt.manager->GetParameterIndex("S")]); //Param
+            std::cout << std::endl;
+        }
+    }
+    void test_derivatives_physicalproperties(){
+        double xi;
+        double s_=1.1;
+        double p_=0.91;
+        double t_=14.4;
+        std::cout << "Dickson T" << std::endl;
+        for(xi=-5; xi<50; xi++) {
+            double b = 1E-06;
+            double a = PhysicalProperties::CalcSaturationVaporPressure_Dickson(xi+b, s_)
+            - PhysicalProperties::CalcSaturationVaporPressure_Dickson(xi, s_);
+            double deriv = PhysicalProperties::CalcSaturationVaporPressureDerivedByT_Dickson(xi, s_);
+            printf("%.20g ", a/b );
+            printf("%.20g", deriv);
+            std::cout << std::endl;
+        }
+        std::cout << "Dickson S" << std::endl;
+        for(xi=-5; xi<50; xi++) {
+            double b = 1E-06;
+            double a = PhysicalProperties::CalcSaturationVaporPressure_Dickson(t_, xi+b)
+            - PhysicalProperties::CalcSaturationVaporPressure_Dickson(t_, xi);
+            double deriv = PhysicalProperties::CalcSaturationVaporPressureDerivedByS_Dickson(t_, xi);
+            printf("%.20g ", a/b );
+            printf("%.20g", deriv);
+            std::cout << std::endl;
+        }
+        std::cout << "CalcReq T" << std::endl;
+                for(xi=-5; xi<50; xi++) {
+            double b = 1E-06;
+            double a = PhysicalProperties::CalcReq(xi+b, s_)
+            - PhysicalProperties::CalcReq(xi, s_);
+            double deriv = PhysicalProperties::CalcReqDerivedByT(xi, s_);
+            printf("%.20g ", a/b );
+            printf("%.20g", deriv);
             std::cout << std::endl;
         }
     }
     void test(){
-        manualtesting::test_ceqmethod();
+        manualtesting::test_derivatives_ceqmethod();
+        test_derivatives_physicalproperties();
     }
 }

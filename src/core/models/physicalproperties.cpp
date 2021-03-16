@@ -287,7 +287,7 @@ double PhysicalProperties::CalcReqDerivedByT(double t, double s)
 {
     const double t_k = t + 273.15;
     const double r_eq = CalcReq(t, s);
-    return -r_eq * (1 + r4_ * s) * (2 * r3_ / (t_k*t_k*t_k) - r2_ / (t_k*t_k));
+    return r_eq * (1 + r4_ * s) * (2 * r3_ / (t_k*t_k*t_k) + r2_ / (t_k*t_k));
 }
 
 double PhysicalProperties::CalcReqDerivedByS(double t, double s)
