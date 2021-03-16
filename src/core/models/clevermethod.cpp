@@ -126,7 +126,6 @@ double CleverMethod::CalculateConcentration(double p, double S, double T, GasTyp
            // Molmasse von Wasser [g/mol]
            18.016 *
 
-           // Molvolumen aus Kipfer et al. 2002
            PhysicalProperties::GetMolarVolume(gas) *
 
             // Partialdruck der trockenen Luft                      * Xe-Anteil
