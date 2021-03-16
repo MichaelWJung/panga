@@ -64,38 +64,51 @@ namespace
 BOOST_FIXTURE_TEST_SUITE(JenkinsMethod_tests, Fixture)
 
 BOOST_AUTO_TEST_CASE(CalculateConcentration)
-{
+{   
+    // Comparison with concentrations calculated with a Matlab skript
+    // using following physical properties:
+    // vpress (water vapor pressure) from Dickson2007/WagnerPruss2002/IAPWS-formulation1995
+    // Vmol (second virial) from Dymond and Smith 1980
+
+    T = 20;
+    S = 0;
+    p = 1;
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::HE),  4.544385343568145e-08, 1e-6);
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::NE),  1.878948951786380e-07, 1e-6);
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::AR),  3.137094392548901e-04, 1e-6);
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::KR),  7.020546527474003e-08, 1e-6);
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::XE),  9.632920511893169e-09, 1e-6);
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::HE3), 6.18662079972421E-14,  1e-6);
 
     T = 0;
     S = 1;
     p = 2;
-    // BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::HE), 9.77748738846232e-08, 1e-6);
-    // BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::NE), 4.48172212527456e-07, 1e-6);
-    // BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::AR), 9.91230382674763e-04, 1e-6);
-    // BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::KR), 2.47039748481394e-07, 1e-6);
-    // BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::XE), 2.47039748481394e-07, 1e-6);
-    // BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::HE3),  1.328780665567e-13, 1e-6);
-
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::HE),  9.94671658952206e-08, 1e-6);
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::NE),  4.55243195998293e-07, 1e-6);
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::AR),  0.00100052397769738,  1e-6);
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::KR),  2.49578519036359e-07, 1e-6);
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::XE),  3.89712229137032e-08, 1e-6);
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::HE3), 1.35177926239257E-13,   1e-6);
 
     T = 10;
     S = .1;
     p = 1;
-    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::HE), 4.719475348066723e-08, 1e-6);
-    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::NE), 2.042257015971631e-07, 1e-6);
-    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::AR), 3.881118783853108e-04, 1e-6);
-    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::KR), 9.154429843320715e-08, 1e-6);   // eigentlich neustes 9.155113959231087e-08
-    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::XE), 1.332573726696234e-08, 1e-6);   // eigentlich neustes 1.331172415306797e-08
-    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::HE3),  6.315021552700E-14, 1e-6);    
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::HE),  4.71946504773741e-08,  1e-6);
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::NE),  2.04235195092371e-07,  1e-6);
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::AR),  3.880914456447179e-04, 1e-6);
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::KR),  9.15504077615987e-08,  1e-6);   
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::XE),  1.331216894740430e-08, 1e-6);  
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::HE3), 6.41944177163345E-14,  1e-6);    
 
     T = 20;
     S = 0;
     p = 1.01;
-    // BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::HE), 4.52241473452391e-08, 1e-6);
-    // BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::NE), 1.86998524534805e-07, 1e-6);
-    // BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::AR), 3.15103538968795e-04, 1e-6);
-    // BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::KR), 7.03793929300997e-08, 1e-6);
-    // BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::XE), 2.47039748481394e-07, 1e-6);
-    // BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::HE3),  6.156710522179E-14, 1e-6);
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::HE),  4.590903108209871e-08, 1e-6);
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::NE),  1.898182467103633e-07, 1e-6);
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::AR),  3.169206682237981e-04, 1e-6);
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::KR),  7.092411060591457e-08, 1e-6);
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::XE),  9.731526130762817e-09, 1e-6);
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::HE3), 6.24994900552799E-14,  1e-6);
 }
 
 // BOOST_AUTO_TEST_CASE(CalculateDerivatives)
