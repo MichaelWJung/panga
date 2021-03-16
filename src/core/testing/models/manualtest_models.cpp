@@ -148,8 +148,52 @@ namespace manualtesting
             std::cout << std::endl;
         }
     }
+    void printconcentrations(){
+        double p_ = 2;
+        double T_ = 0;
+        double S_ = 1;
+        double b = 1 /(
+            (p_-PhysicalProperties::CalcSaturationVaporPressure_Gill(T_))/(1-PhysicalProperties::CalcSaturationVaporPressure_Gill(T_))
+        )*(
+            (p_-PhysicalProperties::CalcSaturationVaporPressure_Dickson(T_, S_))/(1-PhysicalProperties::CalcSaturationVaporPressure_Dickson(T_, S_))
+        );
+        printf("%.15g", 9.77748738846232e-08 * b);  std::cout << std::endl;
+        printf("%.15g", 4.48172212527456e-07 * b); std::cout << std::endl;
+        printf("%.15g", 9.91230382674763e-04 * b); std::cout << std::endl;
+        printf("%.15g", 2.47039748481394e-07 * b); std::cout << std::endl;
+        printf("%.15g",   1.328780665567e-13 * b); std::cout << std::endl;
+
+        T_ = 10;
+        S_ = .1;
+        p_ = 1;
+        b = 1 /(
+            (p_-PhysicalProperties::CalcSaturationVaporPressure_Gill(T_))/(1-PhysicalProperties::CalcSaturationVaporPressure_Gill(T_))
+        )*(
+            (p_-PhysicalProperties::CalcSaturationVaporPressure_Dickson(T_, S_))/(1-PhysicalProperties::CalcSaturationVaporPressure_Dickson(T_, S_))
+        );        printf("%.15g", 4.64269706836073e-08 * b); std::cout << std::endl;
+        printf("%.15g", 2.01619787901304e-07 * b); std::cout << std::endl;
+        printf("%.15g", 3.85849249750526e-04 * b); std::cout << std::endl;
+        printf("%.15g", 9.09654355930234e-08 * b); std::cout << std::endl;
+        printf("%.15g",   6.315021552700E-14 * b); std::cout << std::endl;
+
+
+        T_ = 20;
+        S_ = 0;
+        p_ = 1.01;
+        b = 1 /(
+            (p_-PhysicalProperties::CalcSaturationVaporPressure_Gill(T_))/(1-PhysicalProperties::CalcSaturationVaporPressure_Gill(T_))
+        )*(
+            (p_-PhysicalProperties::CalcSaturationVaporPressure_Dickson(T_, S_))/(1-PhysicalProperties::CalcSaturationVaporPressure_Dickson(T_, S_))
+        );
+        printf("%.15g", 4.52241473452391e-08 * b); std::cout << std::endl;
+        printf("%.15g", 1.86998524534805e-07 * b); std::cout << std::endl;
+        printf("%.15g", 3.15103538968795e-04 * b); std::cout << std::endl;
+        printf("%.15g", 7.03793929300997e-08 * b); std::cout << std::endl;
+        printf("%.15g",   6.156710522179E-14 * b); std::cout << std::endl;
+    }
     void test(){
-        manualtesting::test_derivatives_ceqmethod();
-        test_derivatives_physicalproperties();
+        // manualtesting::test_derivatives_ceqmethod();
+        // test_derivatives_physicalproperties();
+        printconcentrations();
     }
 }
