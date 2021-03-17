@@ -34,7 +34,7 @@ namespace manualtesting
         }
 
         std::shared_ptr<ParameterManager> manager;
-        CleverMethod method; //Change tested method
+        WeissMethod method; //Change tested method
         std::shared_ptr<ParameterAccessor> accessor;
         Eigen::VectorXd vec;
 
@@ -57,8 +57,8 @@ namespace manualtesting
         indices.push_back(fxt.manager->GetParameterIndex("T"));
         dcol->SetDerivativesAndResultsVector(derivatives, indices);
 
-        GasType usedgas = Gas::XE; // WIP: loop different gases
-
+        GasType usedgas = Gas::KR; // WIP: loop different gases
+        
         double xi;
         std::cout << "Weiss/Jenkins T (Gas " << usedgas << ")" << std::endl;  //Param
         for(xi=0; xi<35; xi++) {
@@ -112,6 +112,17 @@ namespace manualtesting
             std::cout << std::endl;
         }
     }
+    void printequilibriumconcentrations(){
+        Fixture fxt;
+        fxt.p = 1; 
+        fxt.S = .1;
+        fxt.T = 10;
+        printf("%.15g ",fxt.method.CalculateConcentration(fxt.accessor, Gas::KR) ); std::cout << std::endl;
+        fxt.p = 2;
+        fxt.S = 1;
+        fxt.T = 0;
+        printf("%.15g ",fxt.method.CalculateConcentration(fxt.accessor, Gas::KR) ); std::cout << std::endl;
+    }
     void test_derivatives_physicalproperties(){
         double xi;
         double s_=1.1;
@@ -149,35 +160,30 @@ namespace manualtesting
         }
     }
     void printconcentrations(){
-        double p_ = 1.01;
-        double S_ = 0;
-        double T_ = 20;
-        double b = 1 /((p_-PhysicalProperties::CalcSaturationVaporPressure_Gill(T_)))
-        *((p_-PhysicalProperties::CalcSaturationVaporPressure_Dickson(T_, S_)))
-        *PhysicalProperties::GetMolarVolume(Gas::XE)/22280.4;
-        printf("%.15g", 9.61329873652310e-9 * b); std::cout << std::endl;
+        double p_; double S_; double T_; double A; double F; double c;
+        p_ = 1; 
+        S_ = .1;
+        T_ = 10;
+        A = .01;
+        F = .2; 
+        c = 1.31506883127e-08  ;
+        printf("%.15g", c+(1-F)*A*PhysicalProperties::GetDryAirVolumeFraction(Gas::KR)/(1+F*A*PhysicalProperties::GetDryAirVolumeFraction(Gas::KR)/c)); std::cout << std::endl;
 
-        p_ = .99;
-        S_ = .001;
-        T_ = 23;
-        b = 1 /((p_-PhysicalProperties::CalcSaturationVaporPressure_Gill(T_)))
-        *((p_-PhysicalProperties::CalcSaturationVaporPressure_Dickson(T_, S_)))
-        *PhysicalProperties::GetMolarVolume(Gas::XE)/22280.4;
-        printf("%.15g", 8.61872441480665e-9 * b); std::cout << std::endl;
 
-        p_ = 4;
-        S_ = 5;
-        T_ = 6;
-        b = 1 /((p_-PhysicalProperties::CalcSaturationVaporPressure_Gill(T_)))
-        *((p_-PhysicalProperties::CalcSaturationVaporPressure_Dickson(T_, S_)))
-        *PhysicalProperties::GetMolarVolume(Gas::XE)/22280.4;
-        printf("%.15g", 5.88642611001335e-8 * b); std::cout << std::endl;
+        p_ = 2;
+        S_ = 1;
+        T_ = 0;
+        A = 3;
+        F = 4;
+        c = 2.47039861698971e-07 ;
+        printf("%.15g", c+(1-F)*A*PhysicalProperties::GetDryAirVolumeFraction(Gas::KR)/(1+F*A*PhysicalProperties::GetDryAirVolumeFraction(Gas::KR)/c)); std::cout << std::endl;
 
     }   
 
     void test(){
-        manualtesting::test_derivatives_ceqmethod();
+        // manualtesting::test_derivatives_ceqmethod();
         // test_derivatives_physicalproperties();
+        printequilibriumconcentrations();
         printconcentrations();
     }
 }

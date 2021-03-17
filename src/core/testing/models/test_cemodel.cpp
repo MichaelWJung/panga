@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_CASE(CalculateConcentration)
                           clever->CalculateConcentration(clever_accessor, Gas::XE),
                           ce_accessor,
                           Gas::XE),
-                      1.38516280692637e-8,
+                      1.38375996198047e-08,
                       1e-6);
 
     A = 31337;
@@ -150,7 +150,7 @@ BOOST_AUTO_TEST_CASE(CalculateConcentration)
                           weiss->CalculateConcentration(weiss_accessor, Gas::KR),
                           ce_accessor,
                           Gas::KR),
-                      6.5046455922903e-8,
+                      6.50464872129845e-08,
                       1e-6);
 }
 
