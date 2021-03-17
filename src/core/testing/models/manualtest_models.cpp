@@ -34,7 +34,7 @@ namespace manualtesting
         }
 
         std::shared_ptr<ParameterManager> manager;
-        WeissMethod method; //Change tested method
+        JenkinsMethod method; //Change tested method
         std::shared_ptr<ParameterAccessor> accessor;
         Eigen::VectorXd vec;
 
@@ -159,31 +159,29 @@ namespace manualtesting
             std::cout << std::endl;
         }
     }
-    void printconcentrations(){
-        double p_; double S_; double T_; double A; double F; double c;
-        p_ = 1; 
-        S_ = .1;
-        T_ = 10;
-        A = .01;
-        F = .2; 
-        c = 1.31506883127e-08  ;
-        printf("%.15g", c+(1-F)*A*PhysicalProperties::GetDryAirVolumeFraction(Gas::KR)/(1+F*A*PhysicalProperties::GetDryAirVolumeFraction(Gas::KR)/c)); std::cout << std::endl;
+    // void printconcentrations(){
+    //     double p_; double S_; double T_; double A; double F; double c;
+    //     p_ = 1; 
+    //     S_ = .1;
+    //     T_ = 10;
+    //     A = .01;
+    //     F = .2; 
+    //     c = 1.31506883127e-08  ;
+    //     printf("%.15g", c+(1-F)*A*PhysicalProperties::GetDryAirVolumeFraction(Gas::KR)/(1+F*A*PhysicalProperties::GetDryAirVolumeFraction(Gas::KR)/c)); std::cout << std::endl;
 
-
-        p_ = 2;
-        S_ = 1;
-        T_ = 0;
-        A = 3;
-        F = 4;
-        c = 2.47039861698971e-07 ;
-        printf("%.15g", c+(1-F)*A*PhysicalProperties::GetDryAirVolumeFraction(Gas::KR)/(1+F*A*PhysicalProperties::GetDryAirVolumeFraction(Gas::KR)/c)); std::cout << std::endl;
-
-    }   
+    //     p_ = 2;
+    //     S_ = 1;
+    //     T_ = 0;
+    //     A = 3;
+    //     F = 4;
+    //     c = 2.47039861698971e-07 ;
+    //     printf("%.15g", c+(1-F)*A*PhysicalProperties::GetDryAirVolumeFraction(Gas::KR)/(1+F*A*PhysicalProperties::GetDryAirVolumeFraction(Gas::KR)/c)); std::cout << std::endl;
+    // }   
 
     void test(){
-        // manualtesting::test_derivatives_ceqmethod();
-        // test_derivatives_physicalproperties();
-        printequilibriumconcentrations();
-        printconcentrations();
+        manualtesting::test_derivatives_ceqmethod();
+        test_derivatives_physicalproperties();
+        // printequilibriumconcentrations();
+        // printconcentrations();
     }
 }
