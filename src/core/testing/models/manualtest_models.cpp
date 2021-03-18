@@ -18,7 +18,7 @@ namespace manualtesting
     struct Fixture
     {
         Fixture() :
-            manager(new ParameterManager()), //WIP: Warum mit new einführen?
+            manager(new ParameterManager()),
             method(manager),
             accessor(method.GetParameterAccessor()),
             vec(manager->GetParametersInOrder().size()),
@@ -57,7 +57,7 @@ namespace manualtesting
         indices.push_back(fxt.manager->GetParameterIndex("T"));
         dcol->SetDerivativesAndResultsVector(derivatives, indices);
 
-        GasType usedgas = Gas::KR; // WIP: loop different gases
+        GasType usedgas = Gas::KR; //(todo) loop different gases
         
         double xi;
         std::cout << "Weiss/Jenkins T (Gas " << usedgas << ")" << std::endl;  //Param

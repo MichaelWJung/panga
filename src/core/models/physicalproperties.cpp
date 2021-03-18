@@ -32,10 +32,32 @@ const std::map<GasType, std::vector<double> > PhysicalProperties::virial_coeffic
     {Gas::XE, std::vector<double>({-130.00, -262.00, -87.0      })},
 };
 
+const double PhysicalProperties::molar_volume_ideal_gas_ = 22414.1;
+
+// Molare Volumen basierend auf CRC Handbook of Chemistry and Physics 76th Edition 1995-1996
+// werden nicht weiter verwendet
 const std::map<GasType, double> PhysicalProperties::molar_volumes_ =
     PhysicalProperties::CalculateMolarVolumes(PhysicalProperties::virial_coefficient_parameters_);
+std::map<GasType, double> PhysicalProperties::CalculateMolarVolumes(
+    const std::map<GasType, std::vector<double> > &a
+    )
+{
+    std::map<GasType, double> ret;
 
-const double PhysicalProperties::molar_volume_ideal_gas_ = 22414.1;
+    for (std::map<GasType, std::vector<double> >::const_iterator it = a.begin(); it != a.end(); ++it)
+    {
+        double b = 0;
+        unsigned i = 0;
+        for (std::vector<double>::const_iterator jt = it->second.begin();
+             jt != it->second.end();
+             ++jt, ++i)
+            b += *jt * std::pow(298.15 / 273.15 - 1, i);
+
+        ret[it->first] = b + molar_volume_ideal_gas_;
+    }
+
+    return ret;
+}
 
 // Molare Volumen basierend auf Dymond and Smith, 1980
 // calculated using the second Virial coefficient approximation
@@ -109,6 +131,7 @@ double PhysicalProperties::CalcSaturationVaporPressure_Dickson(double T_c, doubl
     //Convert to atm
     double vapor_press_atm = vapor_press_kPa/101.32501;
 
+    // Comparison:
     // double oldpressure = CalcSaturationVaporPressure(T_c);
     // printf("%.20g\n", vapor_press_atm);
     // printf("%.20g\n", oldpressure);
@@ -201,36 +224,17 @@ double PhysicalProperties::CalcXeSaltingCoefficient(double T_c)
     return -0.4431009868e2 + 0.218772e4 / T_k + 0.65527e1 * std::log(T_k);
 }
 
-double PhysicalProperties::ConvertToMole(double ccstp, GasType gas) //WIP: Verwendung molares Volumen
+double PhysicalProperties::ConvertToMole(double ccstp, GasType gas) //Wird nicht weiter verwendet
 {
     return ccstp / molar_volumes_.find(gas)->second;
 }
 
 double PhysicalProperties::ConvertToMolePerLiter(double ccstp_g, double p, double S, double T_c, GasType gas)
 {
-    return ccstp_g * CalcWaterDensity(p, S, T_c) / molar_volumes_.find(gas)->second; //WIP: Verwendung molares Volumen
+    return ccstp_g * CalcWaterDensity(p, S, T_c) / molar_volumes_.find(gas)->second; //Wird nicht weiter verwendet
 }
 
-std::map<GasType, double> PhysicalProperties::CalculateMolarVolumes(
-    const std::map<GasType, std::vector<double> > &a //WIP: virial_coefficient_parameters_
-    )
-{
-    std::map<GasType, double> ret;
 
-    for (std::map<GasType, std::vector<double> >::const_iterator it = a.begin(); it != a.end(); ++it)
-    {
-        double b = 0;
-        unsigned i = 0;
-        for (std::vector<double>::const_iterator jt = it->second.begin();
-             jt != it->second.end();
-             ++jt, ++i)
-            b += *jt * std::pow(298.15 / 273.15 - 1, i);
-
-        ret[it->first] = b + molar_volume_ideal_gas_;
-    }
-
-    return ret;
-}
 
 double PhysicalProperties::GetDryAirVolumeFraction(GasType gas)
 {
