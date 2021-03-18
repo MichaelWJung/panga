@@ -25,8 +25,8 @@ class WeissMethodFactory : public CEqMethodFactory
 {
 public:
     ~WeissMethodFactory();
-    std::shared_ptr<CEqCalculationMethod> CreateCEqMethod( //WIP: (Frage) Warum nicht direkt WeissMethod statt CEqCalculationMethod
-        std::shared_ptr<ParameterManager> manager) const; //WIP: Problem: ParameterManager scheint hier noch zu fehlen als include
+    std::shared_ptr<CEqCalculationMethod> CreateCEqMethod(
+        std::shared_ptr<ParameterManager> manager) const;
     std::string GetCEqMethodName() const;
 };
 

@@ -24,9 +24,9 @@
 
 #include "weissmethod.h"
 
-const std::string WeissMethod::NAME = "WeissClever";
+const std::string WeissMethod::NAME = "WeissClever"; // Achtung, der Name wir in combinedmodel.cpp zum abrufen verwendet
 
-std::string WeissMethod::GetCEqMethodName() const   //WIP: Verwendet?
+std::string WeissMethod::GetCEqMethodName() const
 {
     return WeissMethod::NAME;
 }

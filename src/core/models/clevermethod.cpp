@@ -25,9 +25,9 @@
 
 #include "clevermethod.h"
 
-const std::string CleverMethod::NAME = "Weiss,Clever(Xe)";  //WIP: Neu, verwendet?
+const std::string CleverMethod::NAME = "Clever(Xe)"; 
 
-std::string CleverMethod::GetCEqMethodName() const  //WIP: Neu, verwendet?
+std::string CleverMethod::GetCEqMethodName() const
 {
     return CleverMethod::NAME;
 }

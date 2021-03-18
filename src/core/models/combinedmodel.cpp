@@ -63,7 +63,7 @@ void CombinedModel::SetupDerivatives(const std::vector<int> &indices)
 
 double CombinedModel::CalculateEquilibriumConcentration(GasType gas)
 {
-    return (gas == Gas::XE && ceqmethod_factory_->GetCEqMethodName() == "WeissClever") ? //WIP: Schöner lösen?
+    return (gas == Gas::XE && ceqmethod_factory_->GetCEqMethodName() == "WeissClever") ?
                 clever_->CalculateConcentration(clever_accessor_, Gas::XE) :
                 ceqmethod_ ->CalculateConcentration( ceqmethod_accessor_, gas); 
 }
@@ -144,7 +144,7 @@ std::shared_ptr<CombinedModel> CombinedModel::clone() const
     return ret;
 }
 
-std::string CombinedModel::GetExcessAirModelName() const //WIP: Auch noch für Method einbauen, wo wird es verwendet?
+std::string CombinedModel::GetExcessAirModelName() const
 {
     return  model_->GetModelName();
 }

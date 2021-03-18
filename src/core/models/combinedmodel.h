@@ -160,7 +160,7 @@ private:
     //! ParameterAccessor des \ref ExcessAirModel "ExcessAirModels".
     std::shared_ptr<ParameterAccessor>  model_accessor_;
 
-    //! ParameterAccessor der \ref CEqCalculationMethod "CEqCalculationMethods". //WIP: Anpassen
+    //! ParameterAccessor der \ref CEqCalculationMethod "CEqCalculationMethods".
     std::shared_ptr<ParameterAccessor>  ceqmethod_accessor_;
 
     //! ParameterAccessor der CleverMethod.
@@ -169,7 +169,7 @@ private:
     //! DerivativeCollector des \ref ExcessAirModel "ExcessAirModels".
     std::shared_ptr<DerivativeCollector>  model_collector_;
 
-    //! DerivativeCollector des \ref CEqCalculationMethod "CEqCalculationMethods". //WIP: Anpassen
+    //! DerivativeCollector des \ref CEqCalculationMethod "CEqCalculationMethods".
     std::shared_ptr<DerivativeCollector>  ceqmethod_collector_;
 
     //! DerivativeCollector der CleverMethod.
