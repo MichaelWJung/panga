@@ -37,8 +37,8 @@
 
 #include "ceqmethodmanager.h"
 
-//WIP: Achtung: Die Methoden werden in FitSetup::SetModel über GetCEqMethodFactory(const std::string &name) nach ihren Namen ausgewählt.
-//     Namen, die Teilmengen anderer Namen sind können darüber nicht eindeutig zugeordnet werden.
+// Achtung: Die Methoden werden in FitSetup::SetModel über GetCEqMethodFactory(const std::string &name) nach ihren Namen ausgewählt.
+// Namen, die Teilmengen anderer Namen sind können darüber nicht eindeutig zugeordnet werden.
 const std::vector<std::shared_ptr<CEqMethodFactory>> CEqMethodManager::CEQMETHOD_FACTORIES =
     {std::make_shared<WeissMethodFactory>(),
      std::make_shared<JenkinsMethodFactory>()
@@ -46,14 +46,14 @@ const std::vector<std::shared_ptr<CEqMethodFactory>> CEqMethodManager::CEQMETHOD
 
 const CEqMethodManager& CEqMethodManager::Get()
 {
-    static CEqMethodManager manager;  //WIP: Wieso kein Konstuktor?
+    static CEqMethodManager manager;
     return manager;
 }
 
 CEqMethodManager::CEqMethodManager()
 {
     for (auto factory : CEQMETHOD_FACTORIES)
-        ceqmethod_factories_[factory->GetCEqMethodName()] = factory.get(); //WIP: Woher kommt get?
+        ceqmethod_factories_[factory->GetCEqMethodName()] = factory.get();
 }
 
 CEqMethodFactory* CEqMethodManager::GetCEqMethodFactory(const std::string &name) const

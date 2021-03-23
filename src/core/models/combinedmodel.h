@@ -30,7 +30,7 @@
 #include "core/misc/gas.h"
 
 #include "modelfactory.h"
-#include "ceqmethodfactory.h" //WIP: Welche includes noch notwendig?
+#include "ceqmethodfactory.h"
 #include "clevermethod.h"
 
 #include "parametermanager.h"

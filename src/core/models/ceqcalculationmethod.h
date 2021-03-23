@@ -16,7 +16,7 @@
 // along with Panga.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#ifndef CEQCALCULATIONMETHOD_H //WIP: Makro? Bedeutung prüfen
+#ifndef CEQCALCULATIONMETHOD_H
 #define CEQCALCULATIONMETHOD_H
 
 #include <memory>
@@ -82,7 +82,7 @@ public:
         GasType gas
         ) const = 0;
 
-    virtual std::string GetCEqMethodName() const = 0; //WIP: Notwendig?
+    virtual std::string GetCEqMethodName() const = 0;
 };
 
 #endif // CEQCALCULATIONMETHOD_H

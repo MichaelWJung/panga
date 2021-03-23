@@ -65,7 +65,7 @@ QVariant ResultsModel::headerData(int section,
     return QVariant();
 }
 
-const QList<ExtendedColumnType> ResultsModel::GetAvailableColumnTypes() const
+const QList<ExtendedColumnType> ResultsModel::GetAvailableColumnTypes() const //Position gibt Reihenfolge
 {
     const unsigned n_covariances = (n_parameters_ * (n_parameters_ - 1) / 2);
     QList<ExtendedColumnType> cols;
@@ -99,14 +99,19 @@ const QList<ExtendedColumnType> ResultsModel::GetAvailableColumnTypes() const
         cols.push_back({ColumnType::MODEL_CONCENTRATION_ERROR, i});
     }
 
-    for (unsigned i = 0; i < 5; ++i)
+    for (unsigned i = 0; i < 5; ++i) //WIPev1
     {
         cols.push_back({ColumnType::MEASURED_CONCENTRATION,       i});
         cols.push_back({ColumnType::MEASURED_CONCENTRATION_ERROR, i});
     }
 
     cols.push_back({ColumnType::CHI, 0});
-
+    cols.push_back({ColumnType::DELTA_NEON,         0});
+    cols.push_back({ColumnType::DELTA_NEON_ERROR,   0});
+    cols.push_back({ColumnType::RAD_HE,             0});
+    cols.push_back({ColumnType::RAD_HE_ERROR,       0});
+    cols.push_back({ColumnType::RAD_HE3,            0});
+    cols.push_back({ColumnType::RAD_HE3_ERROR,      0});
     return cols;
 }
 
@@ -126,13 +131,13 @@ const QList<ExtendedColumnType> ResultsModel::GetDoubleColumnTypes() const
     return available_column_types;
 }
 
-QVariant ResultsModel::GetElement(
+QVariant ResultsModel::GetElement( //WIP: Für einen Column Type, welche werden alle abgefragt?
         const FitResults& results,
         const ExtendedColumnType& column_type) const
 {
     try
     {
-        unsigned i = column_type.second;
+        unsigned i = column_type.second; //Hier wird Gas gewählt
         switch (column_type.first)
         {
             case ColumnType::DEGREES_OF_FREEDOM:
@@ -169,6 +174,47 @@ QVariant ResultsModel::GetElement(
             }
             case ColumnType::RESIDUAL:
                 return GetResidualForGas(results, i);
+            case ColumnType::DELTA_NEON:
+                return GetDeltaNeon(results);
+            case ColumnType::DELTA_NEON_ERROR:
+                 return GetDeltaNeonError(results);
+            case ColumnType::RAD_HE:
+                return (results.measured_concentrations.at(0).at(                    
+                        static_cast<GasType>(0)).value
+                        - results.model_concentrations.at(0).at(
+                        static_cast<GasType>(0)).value);
+            case ColumnType::RAD_HE_ERROR:
+                return std::sqrt(
+                    std::pow(
+                        results.measured_concentrations.at(0).at(
+                        static_cast<GasType>(0)).error,
+                        2.0
+                    )
+                    + std::pow(
+                        results.model_concentrations.at(0).at(
+                        static_cast<GasType>(i)).error,
+                        2.0
+                    )
+                );
+            case ColumnType::RAD_HE3:
+                return 0.00000002*( //WIP: in physical properties!
+                        results.measured_concentrations.at(0).at(                    
+                        static_cast<GasType>(0)).value
+                        - results.model_concentrations.at(0).at(
+                        static_cast<GasType>(0)).value);
+            case ColumnType::RAD_HE3_ERROR: 
+                return 0.00000002*std::sqrt(
+                    std::pow(
+                        results.measured_concentrations.at(0).at(
+                        static_cast<GasType>(0)).error,
+                        2.0
+                    )
+                    + std::pow(
+                        results.model_concentrations.at(0).at(
+                        static_cast<GasType>(i)).error,
+                        2.0
+                    )
+                );
             case ColumnType::EQUILIBRIUM_CONCENTRATION:
                 return results.equilibrium_concentrations.at(0).at(
                         static_cast<GasType>(i)).value;
@@ -223,6 +269,18 @@ QString ResultsModel::GetColumnName(const ExtendedColumnType& type) const
         case ColumnType::RESIDUAL:
             return QString::fromStdString("Res_" +
                     Gas::GasTypeToString(GetGasFromIndex(i)));
+        case ColumnType::DELTA_NEON:
+            return "D_Ne [%]";
+        case ColumnType::DELTA_NEON_ERROR:
+            return "D_Ne_err [%]";
+        case ColumnType::RAD_HE:
+            return "Rad_He [ccSTP/g]";
+        case ColumnType::RAD_HE_ERROR:
+            return "Rad_He_err [ccSTP/g]";
+        case ColumnType::RAD_HE3:
+            return "Rad_³He [ccSTP/g]";
+        case ColumnType::RAD_HE3_ERROR:
+            return "Rad_³He_err [ccSTP/g]";
         case ColumnType::EQUILIBRIUM_CONCENTRATION:
         case ColumnType::EQUILIBRIUM_CONCENTRATION_ERROR:
         case ColumnType::MODEL_CONCENTRATION:
@@ -269,9 +327,38 @@ double ResultsModel::GetResidualForGas(const FitResults& results,
     GasType gas = GetGasFromIndex(gas_index);
     assert(results.residuals.size() == unsigned(results.residual_gases.size()));
     for (unsigned i = 0; i < results.residuals.size(); ++i)
-        if (results.residual_gases[i] == gas)
+        if (results.residual_gases[i] == gas) //WIP: Wofür brauche ich die Prüfung und brauche ich sie auch für DNe?
             return results.residuals[i];
     return std::numeric_limits<double>::quiet_NaN();
+}
+
+
+double ResultsModel::GetDeltaNeon(const FitResults& results) const
+{
+    //WIP: Prüfen ob es Neon gibt?
+    return 
+        (
+            results.measured_concentrations.at(0).at(static_cast<GasType>(1)).value
+            - results.equilibrium_concentrations.at(0).at(static_cast<GasType>(1)).value
+        )
+        / results.equilibrium_concentrations.at(0).at(static_cast<GasType>(1)).value
+        * 100;
+}
+double ResultsModel::GetDeltaNeonError(const FitResults& results) const //WIP: Fehlerrechnung anpassen (nicht unabhängig)
+{
+    return 
+        std::sqrt
+        (
+            std::pow(
+                results.measured_concentrations.at(0).at(static_cast<GasType>(1)).error
+                / results.measured_concentrations.at(0).at(static_cast<GasType>(1)).value, 2.)
+            + std::pow(
+                results.equilibrium_concentrations.at(0).at(static_cast<GasType>(1)).error
+                / results.equilibrium_concentrations.at(0).at(static_cast<GasType>(1)).value, 2.)
+        )
+        * results.measured_concentrations.at(0).at(static_cast<GasType>(1)).value
+        / results.equilibrium_concentrations.at(0).at(static_cast<GasType>(1)).value
+        *100 ;
 }
 
 GasType ResultsModel::GetGasFromIndex(unsigned i) const

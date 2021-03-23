@@ -210,7 +210,7 @@ void FitSetupWidget::InitializeSolubilityBox() //WIP: Mehr anzupassen?
     std::vector<std::string> available_models =
             CEqMethodManager::Get().GetAvailableCEqMethods(); //WIP: Gleiches Problem wie davor!
 
-    if (available_models.empty()) //WIP: irgendwas anpassen??
+    if (available_models.empty()) //WIP: anpassen?
     {
         //! \todo Irgendwie sicherstellen, dass die Fitknöpfe auch deaktiviert sind.
 //         ui->standard_fit_button->setEnabled(false);
