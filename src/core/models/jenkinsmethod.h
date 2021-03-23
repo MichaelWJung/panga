@@ -30,9 +30,11 @@
 #define NOBLE_IS_CEQ_CALCULATION_METHOD
 #include "generatehelperclasses.h"
 
-//! Berechnung von Gleichgewichtskonzentrationen nach Jenkins. //WIP: Jenkins hier eintragen:
+//! Berechnung von Gleichgewichtskonzentrationen nach Jenkins.
 /*!
-  Aus Kipfer et al. 2002, Noble Gases in Lakes and Ground Waters:
+  Aus Jenkins et al., A determination of atmospheric helium, neon, argon, krypton, 
+  and xenon solubility concentrations in water and seawater. 
+  Marine Chemistry, 211:94–107, Apr. 2019. 
   \f[
     C^i_{eq}=exp\left(t^i_1+
                       t^i_2\cdot\frac{100}{T}+
@@ -41,12 +43,13 @@
                       S\cdot\left[s^i_1+
                                   s^i_2\cdot\frac{T}{100}+
                                   s^i_3\cdot\left(\frac{T}{100}\right)^2
-                                  \right]
+                                  \right]+
+                      S^2s^i_4
                       \right)\cdot
              \frac{p-e_w(T)}{(1-e_w(T))\cdot1000}
   \f]
 
-  \f$C^i_{eq}\f$: Gleichgewichtskonzentration von i (He, Ne, Ar, Kr) in ccSTP/g.\n
+  \f$C^i_{eq}\f$: Gleichgewichtskonzentration von i (He, Ne, Ar, Kr) in mol/kg.\n
   \f$e_w\f$: Sättigungsdampfdruck des Wassers.\n
   \f$p\f$: Luftdruck in atm.\n
   \f$T\f$: Temperatur in K.\n
@@ -89,7 +92,7 @@ public:
 
     static const std::string NAME;
     
-    std::string GetCEqMethodName() const; //WIP: Verwendet?
+    std::string GetCEqMethodName() const;
 
 private:
 
