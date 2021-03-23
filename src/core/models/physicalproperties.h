@@ -90,7 +90,7 @@ public:
       */
     static double ConvertToMole(double ccstp, GasType gas);
 
-    //! Wandelt Gaskonzentrationen im Wasser von mol/l in ccSTP/g um.
+    //! Wandelt Gaskonzentrationen im Wasser von ccSTP/g in mol/l um.
     /*!
       Da das Wasservolumen keine Stoffmenge angibt müssen Druck, Salinität und Temperatur mit angegeben werden.
       \param ccstp_g Konzentration in ccSTP/g.

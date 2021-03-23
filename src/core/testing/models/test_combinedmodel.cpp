@@ -25,16 +25,19 @@
 
 #include "core/models/clevermethod.h"
 #include "core/models/weissmethod.h"
+#include "core/models/weissmethodfactory.h"
 #include "core/models/combinedmodel.h"
 
 #include "testmodel.h"
+#include "testceqmethod.h"
 
 BOOST_AUTO_TEST_SUITE(CombinedModel_tests)
 
 BOOST_AUTO_TEST_CASE(ParameterNotFound)
-{
+{   
     ModelFactory* factory(new TestFactory());
-    CombinedModel model(factory);
+    CEqMethodFactory* ceqmethod_factory(new TestCEqFactory());
+    CombinedModel model(factory, ceqmethod_factory);
 
     BOOST_CHECK_NO_THROW(model.GetParameterIndex("a"));
     BOOST_CHECK_NO_THROW(model.GetParameterIndex("b"));
@@ -51,7 +54,8 @@ BOOST_AUTO_TEST_CASE(ParameterNotFound)
 BOOST_AUTO_TEST_CASE(ConcentrationsAndDerivatives)
 {
     ModelFactory* factory(new TestFactory());
-    CombinedModel model(factory);
+    CEqMethodFactory* ceqmethod_factory(new WeissMethodFactory()); // Use Weiss to test concentrations and derivatives
+    CombinedModel model(factory, ceqmethod_factory);
 
     std::vector<int> indices;
     indices.push_back(model.GetParameterIndex("a"));
@@ -148,7 +152,8 @@ BOOST_AUTO_TEST_CASE(ConcentrationsAndDerivatives)
 BOOST_AUTO_TEST_CASE(SanityChecks)
 {
     ModelFactory* factory(new TestFactory());
-    CombinedModel model(factory);
+    CEqMethodFactory* ceqmethod_factory(new TestCEqFactory());
+    CombinedModel model(factory, ceqmethod_factory);
 
     Eigen::VectorXd parameters(3);
     BOOST_CHECK_THROW(model.SetParameters(parameters), std::invalid_argument);

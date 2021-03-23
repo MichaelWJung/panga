@@ -16,25 +16,22 @@
 // along with Panga.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#include <QApplication>
-#include <QLocale>
-#include <QTextCodec>
+#include "weissmethod.h"
 
-#include <iostream>
+#include "weissmethodfactory.h"
 
-#include "mainwindow.h"
-// #include "../core/testing/models/manualtest_models.cpp"
-
-int main(int argc, char* argv[])
-{   
-    // manualtesting::test();
-    QApplication app(argc, argv);
-    std::locale::global(std::locale::classic());
-    QLocale::setDefault(QLocale::c());
-    MainWindow* main_window = new MainWindow();
-    main_window->show();
-    int ret = app.exec();
-    delete main_window;
-    return ret;
+WeissMethodFactory::~WeissMethodFactory()
+{
 }
 
+std::shared_ptr<CEqCalculationMethod> WeissMethodFactory::CreateCEqMethod(
+    std::shared_ptr<ParameterManager> manager
+) const
+{
+    return std::make_shared<WeissMethod>(manager);
+}
+
+std::string WeissMethodFactory::GetCEqMethodName() const
+{
+    return WeissMethod::NAME;
+}

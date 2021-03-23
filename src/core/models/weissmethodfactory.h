@@ -16,25 +16,18 @@
 // along with Panga.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#include <QApplication>
-#include <QLocale>
-#include <QTextCodec>
+#ifndef WEISSMETHODFACTORY_H
+#define WEISSMETHODFACTORY_H
 
-#include <iostream>
+#include "ceqmethodfactory.h"
 
-#include "mainwindow.h"
-// #include "../core/testing/models/manualtest_models.cpp"
+class WeissMethodFactory : public CEqMethodFactory
+{
+public:
+    ~WeissMethodFactory();
+    std::shared_ptr<CEqCalculationMethod> CreateCEqMethod( //WIP: (Frage) Warum nicht direkt WeissMethod statt CEqCalculationMethod
+        std::shared_ptr<ParameterManager> manager) const; //WIP: Problem: ParameterManager scheint hier noch zu fehlen als include
+    std::string GetCEqMethodName() const;
+};
 
-int main(int argc, char* argv[])
-{   
-    // manualtesting::test();
-    QApplication app(argc, argv);
-    std::locale::global(std::locale::classic());
-    QLocale::setDefault(QLocale::c());
-    MainWindow* main_window = new MainWindow();
-    main_window->show();
-    int ret = app.exec();
-    delete main_window;
-    return ret;
-}
-
+#endif // WEISSMETHODFACTORY_H

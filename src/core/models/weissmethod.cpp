@@ -24,6 +24,13 @@
 
 #include "weissmethod.h"
 
+const std::string WeissMethod::NAME = "WeissClever";
+
+std::string WeissMethod::GetCEqMethodName() const   //WIP: Verwendet?
+{
+    return WeissMethod::NAME;
+}
+
 WeissMethod::WeissMethod(std::shared_ptr<ParameterManager> manager)
 {
     RegisterParameters(manager,

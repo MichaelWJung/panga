@@ -16,8 +16,8 @@
 // along with Panga.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#ifndef CLEVERMETHOD_H
-#define CLEVERMETHOD_H
+#ifndef JENKINSMETHOD_H
+#define JENKINSMETHOD_H
 
 #include <memory>
 
@@ -26,51 +26,42 @@
 
 #define NOBLE_PARAMETER_COUNT 3
 #define NOBLE_PARAMETER_NAMES (p, S, T)
-#define NOBLE_CLASS_PREFIX Clever
+#define NOBLE_CLASS_PREFIX Jenkins
 #define NOBLE_IS_CEQ_CALCULATION_METHOD
 #include "generatehelperclasses.h"
 
-//! Berechnung von Gleichgewichtskonzentrationen nach Clever.
+//! Berechnung von Gleichgewichtskonzentrationen nach Jenkins. //WIP: Jenkins hier eintragen:
 /*!
   Aus Kipfer et al. 2002, Noble Gases in Lakes and Ground Waters:
   \f[
-    C^i_{eq}=\frac{X_i(T)}{M_{H_2O}}\cdot
-           \frac{(p-e_w(T))\cdot z_i}{p_0}\cdot
-           \frac{\rho(T,S=0)}{\rho(T,S)}\cdot
-           V_i\cdot
-           e^{-K_i(T)\cdot c_{NaCl}}
+    C^i_{eq}=exp\left(t^i_1+
+                      t^i_2\cdot\frac{100}{T}+
+                      t^i_3\cdot ln\left(\frac{T}{100}\right)+
+                      t^i_4\cdot\frac{T}{100}+
+                      S\cdot\left[s^i_1+
+                                  s^i_2\cdot\frac{T}{100}+
+                                  s^i_3\cdot\left(\frac{T}{100}\right)^2
+                                  \right]
+                      \right)\cdot
+             \frac{p-e_w(T)}{(1-e_w(T))\cdot1000}
   \f]
 
-  Aus Aeschbach-Hertig et al. 1999, Interpretation of dissolved atmospheric noble gases in natural
-  waters:
-  \f[
-    c_{NaCl}=S\cdot\frac{\rho(p,T,S)}{M_{NaCl}}
-  \f]
-
-  \f$C^i_{eq}\f$: Gleichgewichtskonzentration von i (momentan nur Xe).\n
-  \f$X_i\f$: \ref PhysicalProperties::CalcXeMoleFractionSolubility "Mole fraction solubility des Gases"
-    (einheitenlos).\n
-  \f$M_{H_2O}\f$: Molmasse von Wasser.\n
-  \f$e_w\f$: \ref PhysicalProperties::CalcSaturationVaporPressure "Sättigungsdampfdruck des Wassers".\n
-  \f$z_i\f$: Volumen-Anteil des Gases in trockener Luft.\n
-  \f$\rho(T,S)\f$: \ref PhysicalProperties::CalcWaterDensity "Dichte des Wassers".\n
-  \f$V_i\f$: Molvolumen des Gases.\n
-  \f$K_i\f$: \ref PhysicalProperties::CalcXeSaltingCoefficient "Salting Coefficient des Gases"
-    in l/mol (Einheit unsicher).\n
-  \f$c_{NaCl}\f$: Molare Konzentration von NaCl.\n
-  \f$M_{NaCl}\f$: Molmasse von NaCl.\n
-  \f$p\f$: Luftdruck.\n
-  \f$T\f$: Temperatur.\n
-  \f$S\f$: Salinität.
+  \f$C^i_{eq}\f$: Gleichgewichtskonzentration von i (He, Ne, Ar, Kr) in ccSTP/g.\n
+  \f$e_w\f$: Sättigungsdampfdruck des Wassers.\n
+  \f$p\f$: Luftdruck in atm.\n
+  \f$T\f$: Temperatur in K.\n
+  \f$S\f$: Salinität in g/kg.\n
+  \f$t^i_j\f$: Temperaturkoeffizienten.\n
+  \f$s^i_j\f$: Salinitätskoeffizienten.\n
   */
-class CleverMethod : public CEqCalculationMethod
+class JenkinsMethod : public CEqCalculationMethod
 {
     #include "generatehelpermethods.h"
 public:
 
-    CleverMethod(std::shared_ptr<ParameterManager> manager);
+    JenkinsMethod(std::shared_ptr<ParameterManager> manager);
 
-    ~CleverMethod() {}
+    ~JenkinsMethod() {}
 
     double CalculateConcentration(
         std::shared_ptr<ParameterAccessor> parameters,
@@ -83,12 +74,12 @@ public:
         GasType gas
         ) const;
 
-
     //! Führt die eigentlich Berechnung der Konzentration durch.
     /*!
       \param p Druck in atm.
       \param S Salinität in g/kg.
       \param T Temperatur in °C.
+      \param gas Edelgas für das die Berechnung durchgeführt werden soll.
       \return Gleichgewichtskonzentration in ccSTP/g.
       */
     static double CalculateConcentration(double p,
@@ -101,8 +92,33 @@ public:
     std::string GetCEqMethodName() const; //WIP: Verwendet?
 
 private:
-    //! Volumen-Anteil von Xe in trockener Luft.
-    static const double z_;
+
+    //! Berechnet die exp-Funktion aus der Jenkins-Formel.
+    static double CalcJenkinsExpFunction(double t, double s, GasType gas);
+
+    //! Jenkins coefficient.
+    static const std::vector<double> t1;
+
+    //! Jenkins coefficient.
+    static const std::vector<double> t2;
+
+    //! Jenkins coefficient.
+    static const std::vector<double> t3;
+
+    //! Jenkins coefficient.
+    static const std::vector<double> t4;
+
+    //! Jenkins coefficient.
+    static const std::vector<double> s1;
+
+    //! Jenkins coefficient.
+    static const std::vector<double> s2;
+
+    //! Jenkins coefficient.
+    static const std::vector<double> s3;
+
+    //! Jenkins coefficient.
+    static const std::vector<double> s4;
 };
 
-#endif // CLEVERMETHOD_H
+#endif // JENKINSMETHOD_H

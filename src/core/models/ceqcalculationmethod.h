@@ -16,7 +16,7 @@
 // along with Panga.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#ifndef CEQCALCULATIONMETHOD_H
+#ifndef CEQCALCULATIONMETHOD_H //WIP: Makro? Bedeutung prüfen
 #define CEQCALCULATIONMETHOD_H
 
 #include <memory>
@@ -37,6 +37,7 @@ class CEqCalculationMethod
 {
 
 public:
+    CEqCalculationMethod(){}
 
     //! Destruktor.
     virtual ~CEqCalculationMethod() {}
@@ -80,6 +81,8 @@ public:
         std::shared_ptr<DerivativeCollector> derivatives,
         GasType gas
         ) const = 0;
+
+    virtual std::string GetCEqMethodName() const = 0; //WIP: Notwendig?
 };
 
 #endif // CEQCALCULATIONMETHOD_H

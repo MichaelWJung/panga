@@ -30,8 +30,9 @@
 #include "core/misc/gas.h"
 
 #include "modelfactory.h"
+#include "ceqmethodfactory.h" //WIP: Welche includes noch notwendig?
 #include "clevermethod.h"
-#include "weissmethod.h"
+
 #include "parametermanager.h"
 #include "parameteraccessor.h"
 #include "derivativecollector.h"
@@ -49,11 +50,7 @@ class CombinedModel
 public:
 
     //! Erzeugt mit dem mit der übergebenen Factory erstellten ExcessAirModel ein CombinedModel.
-    /*!
-      Derzeit können die C_eq-Berechnungsmethoden noch nicht gewählt werden. Für Xe wird Clever
-      verwendet, für alle anderen Gase Weiss.
-      */
-    CombinedModel(ModelFactory* factory);
+    CombinedModel(ModelFactory* factory, CEqMethodFactory* ceqmethod_factory);
 
     //! Setzt neue Parameter-Werte.
     /*!
@@ -126,6 +123,9 @@ public:
     //! Gibt den Namen des verwendeten ExcessAirModels zurück.
     std::string GetExcessAirModelName() const;
 
+    //! Gibt den Namen der verwendeten CEqMethod zurück.
+    std::string GetCEqMethodName() const;
+
     //! \brief Wenn auf wahr gesetzt wird vom Modell nan zurückgegeben falls
     //! Parameterwerte außerhalb der Constraints angegeben werden.
     void SetApplyConstraints(bool apply);
@@ -141,14 +141,18 @@ private:
     ModelFactory*
     factory_;
 
+    //! ModelFactory wird gespeichert um das CombinedModel leicht klonen zu können.
+    CEqMethodFactory*
+    ceqmethod_factory_;
+
     //! ParameterManager der zur Konfiguration der Modelle verwendet wird.
     std::shared_ptr<ParameterManager> manager_;
 
     //! Verwendetes ExcessAirModel
     std::shared_ptr<ExcessAirModel> model_;
 
-    //! Weiss-Methode zur Berechnung der Gleichgewichtskonzentrationen von He, Ne, Ar, Kr.
-    std::shared_ptr<WeissMethod> weiss_;
+    //! Verwendete CEqCalculationMethod
+    std::shared_ptr<CEqCalculationMethod> ceqmethod_;
 
     //! Clever-Methode zur Berechnung der Gleichgewichtskonzentrationen von Xe.
     std::shared_ptr<CleverMethod> clever_;
@@ -156,8 +160,8 @@ private:
     //! ParameterAccessor des \ref ExcessAirModel "ExcessAirModels".
     std::shared_ptr<ParameterAccessor>  model_accessor_;
 
-    //! ParameterAccessor der WeissMethod.
-    std::shared_ptr<ParameterAccessor>  weiss_accessor_;
+    //! ParameterAccessor der \ref CEqCalculationMethod "CEqCalculationMethods". //WIP: Anpassen
+    std::shared_ptr<ParameterAccessor>  ceqmethod_accessor_;
 
     //! ParameterAccessor der CleverMethod.
     std::shared_ptr<ParameterAccessor> clever_accessor_;
@@ -165,8 +169,8 @@ private:
     //! DerivativeCollector des \ref ExcessAirModel "ExcessAirModels".
     std::shared_ptr<DerivativeCollector>  model_collector_;
 
-    //! DerivativeCollector der WeissMethod.
-    std::shared_ptr<DerivativeCollector>  weiss_collector_;
+    //! DerivativeCollector des \ref CEqCalculationMethod "CEqCalculationMethods". //WIP: Anpassen
+    std::shared_ptr<DerivativeCollector>  ceqmethod_collector_;
 
     //! DerivativeCollector der CleverMethod.
     std::shared_ptr<DerivativeCollector> clever_collector_;

@@ -133,18 +133,18 @@ double PhysicalProperties::CalcXeSaltingCoefficient(double T_c)
     return -0.4431009868e2 + 0.218772e4 / T_k + 0.65527e1 * std::log(T_k);
 }
 
-double PhysicalProperties::ConvertToMole(double ccstp, GasType gas)
+double PhysicalProperties::ConvertToMole(double ccstp, GasType gas) //WIP: Verwendung molares Volumen
 {
     return ccstp / molar_volumes_.find(gas)->second;
 }
 
 double PhysicalProperties::ConvertToMolePerLiter(double ccstp_g, double p, double S, double T_c, GasType gas)
 {
-    return ccstp_g * CalcWaterDensity(p, S, T_c) / molar_volumes_.find(gas)->second;
+    return ccstp_g * CalcWaterDensity(p, S, T_c) / molar_volumes_.find(gas)->second; //WIP: Verwendung molares Volumen
 }
 
 std::map<GasType, double> PhysicalProperties::CalculateMolarVolumes(
-    const std::map<GasType, std::vector<double> > &a
+    const std::map<GasType, std::vector<double> > &a //WIP: virial_coefficient_parameters_
     )
 {
     std::map<GasType, double> ret;

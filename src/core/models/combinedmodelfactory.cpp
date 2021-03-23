@@ -20,8 +20,9 @@
 
 #include "combinedmodelfactory.h"
 
-CombinedModelFactory::CombinedModelFactory(ModelFactory* factory) :
-    factory_(factory)
+CombinedModelFactory::CombinedModelFactory(ModelFactory* factory, CEqMethodFactory* ceqmethod_factory) :
+    factory_(factory),
+    ceqmethod_factory_(ceqmethod_factory)
 {
 }
 
@@ -29,7 +30,9 @@ std::shared_ptr<CombinedModel> CombinedModelFactory::CreateModel() const
 {
     if (!factory_)
         throw std::runtime_error("CombinedModelFactory: No factory set.");
-    return std::make_shared<CombinedModel>(factory_);
+    if (!ceqmethod_factory_)
+        throw std::runtime_error("CombinedModelFactory: No ceqmethod_factory set.");
+    return std::make_shared<CombinedModel>(factory_, ceqmethod_factory_);
 }
 
 std::string CombinedModelFactory::GetExcessAirModelName() const

@@ -34,6 +34,7 @@ set(models_TESTS
     test_weissderivativecollector.cpp
     test_weissmethod.cpp
     test_weissparameteraccessor.cpp
+    test_jenkinsmethod.cpp
     )
 
 add_executable(test_models ${models_TESTS})

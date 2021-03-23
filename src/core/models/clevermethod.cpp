@@ -25,6 +25,13 @@
 
 #include "clevermethod.h"
 
+const std::string CleverMethod::NAME = "Weiss,Clever(Xe)";  //WIP: Neu, verwendet?
+
+std::string CleverMethod::GetCEqMethodName() const  //WIP: Neu, verwendet?
+{
+    return CleverMethod::NAME;
+}
+
 CleverMethod::CleverMethod(std::shared_ptr<ParameterManager> manager)
 {
     RegisterParameters(manager,

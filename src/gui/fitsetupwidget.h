@@ -59,6 +59,7 @@ protected:
 private:
     void LinkModelsAndViews();
     void InitializeModelBox();
+    void InitializeSolubilityBox();
     void SetupNobleGasCheckBoxes();
     
     //! Entfernt und zerstört alle Widgets des Layouts sowie das Layout selbst.

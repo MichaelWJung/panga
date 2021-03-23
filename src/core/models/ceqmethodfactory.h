@@ -16,25 +16,32 @@
 // along with Panga.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#include <QApplication>
-#include <QLocale>
-#include <QTextCodec>
+#ifndef CEQMETHODFACTORY_H //WIP: Was ist das?
+#define CEQMETHODFACTORY_H
 
-#include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
 
-#include "mainwindow.h"
-// #include "../core/testing/models/manualtest_models.cpp"
+#include "core/misc/parameter_description.h"
+#include "core/models/parametermanager.h"
 
-int main(int argc, char* argv[])
-{   
-    // manualtesting::test();
-    QApplication app(argc, argv);
-    std::locale::global(std::locale::classic());
-    QLocale::setDefault(QLocale::c());
-    MainWindow* main_window = new MainWindow();
-    main_window->show();
-    int ret = app.exec();
-    delete main_window;
-    return ret;
-}
+#include "ceqcalculationmethod.h"
 
+//! Muss von Plugins zum Erzeugen von Methoden bereitgestellt werden.
+class CEqMethodFactory
+{
+
+public:
+
+    virtual ~CEqMethodFactory() {}
+
+    //! Erzeugt die Methode.
+    virtual std::shared_ptr<CEqCalculationMethod> CreateCEqMethod( 
+        std::shared_ptr<ParameterManager> manager
+        ) const = 0;
+
+    virtual std::string GetCEqMethodName() const = 0;
+};
+
+#endif // CEQMETHODFACTORY_H
