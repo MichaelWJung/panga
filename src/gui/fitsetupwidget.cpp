@@ -97,12 +97,12 @@ void FitSetupWidget::SetFitSetup(FitSetup* fit_setup)
     LinkModelsAndViews();
 
     UpdateGasesInUse();
-    int model_index = ui->model_combo_box->findText(fit_setup_->GetModelName()); //WIP: Wofür ist dieser Teil gut?
+    int model_index = ui->model_combo_box->findText(fit_setup_->GetModelName()); 
     {
         SignalBlocker blocker(ui->model_combo_box);
         ui->model_combo_box->setCurrentIndex(model_index);
     }
-    int ceqmethod_index = ui->solubility_combo_box->findText(fit_setup_->GetCEqMethodName()); //WIP: Wofür ist dieser Teil gut?
+    int ceqmethod_index = ui->solubility_combo_box->findText(fit_setup_->GetCEqMethodName()); 
     {
         SignalBlocker blocker(ui->solubility_combo_box);
         ui->solubility_combo_box->setCurrentIndex(ceqmethod_index);
@@ -205,12 +205,12 @@ void FitSetupWidget::InitializeModelBox()
             this, SLOT(SetActiveModel()));
 }
 
-void FitSetupWidget::InitializeSolubilityBox() //WIP: Mehr anzupassen?
+void FitSetupWidget::InitializeSolubilityBox() //(note): Mehr anzupassen?
 {
     std::vector<std::string> available_models =
-            CEqMethodManager::Get().GetAvailableCEqMethods(); //WIP: Gleiches Problem wie davor!
+            CEqMethodManager::Get().GetAvailableCEqMethods(); //(note): Gleiches Problem wie davor!
 
-    if (available_models.empty()) //WIP: anpassen?
+    if (available_models.empty()) //(note): anpassen?
     {
         //! \todo Irgendwie sicherstellen, dass die Fitknöpfe auch deaktiviert sind.
 //         ui->standard_fit_button->setEnabled(false);
@@ -307,7 +307,7 @@ void FitSetupWidget::EmitNameChanged(QString name)
 
 void FitSetupWidget::SetActiveModel()
 {
-    fit_setup_->SetModel(ui->model_combo_box->currentText(), ui->solubility_combo_box->currentText()); //WIP: SETMODEL
+    fit_setup_->SetModel(ui->model_combo_box->currentText(), ui->solubility_combo_box->currentText());
 }
 
 void FitSetupWidget::UpdateParameters()

@@ -183,7 +183,7 @@ void FitSetup::load(Archive& ar, const unsigned version)
     ar >> model;
     std::string ceqmethod;
     ar >> ceqmethod;
-    //WIP: Öffnen gespeicherter Ergebnisse aus voriger Version möglich machen
+    //(todo): Öffnen gespeicherter Ergebnisse aus voriger Version möglich machen
 
     SetModel(QString::fromStdString(model), QString::fromStdString(ceqmethod)); 
     

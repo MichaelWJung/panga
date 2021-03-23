@@ -99,7 +99,7 @@ const QList<ExtendedColumnType> ResultsModel::GetAvailableColumnTypes() const //
         cols.push_back({ColumnType::MODEL_CONCENTRATION_ERROR, i});
     }
 
-    for (unsigned i = 0; i < 5; ++i) //WIPev1
+    for (unsigned i = 0; i < 5; ++i)
     {
         cols.push_back({ColumnType::MEASURED_CONCENTRATION,       i});
         cols.push_back({ColumnType::MEASURED_CONCENTRATION_ERROR, i});
@@ -344,7 +344,10 @@ double ResultsModel::GetDeltaNeon(const FitResults& results) const
         / results.equilibrium_concentrations.at(0).at(static_cast<GasType>(1)).value
         * 100;
 }
-double ResultsModel::GetDeltaNeonError(const FitResults& results) const //WIP: Fehlerrechnung anpassen (nicht unabhängig)
+double ResultsModel::GetDeltaNeonError(const FitResults& results) const
+// Fehlerrechnung hier ist nur Näherung (eigentlich nicht unabhängig) 
+// (Aber Ne Konzentration hat keine so starke Gewichtung für Bestimmung T und damit Ceq,
+// deswegen kann die Näherung verwendet werden)
 {
     return 
         std::sqrt
