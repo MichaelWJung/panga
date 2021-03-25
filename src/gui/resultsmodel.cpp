@@ -131,7 +131,7 @@ const QList<ExtendedColumnType> ResultsModel::GetDoubleColumnTypes() const
     return available_column_types;
 }
 
-QVariant ResultsModel::GetElement( //WIP: Für einen Column Type, welche werden alle abgefragt?
+QVariant ResultsModel::GetElement( //(note) Für einen Column Type, welche werden alle abgefragt?
         const FitResults& results,
         const ExtendedColumnType& column_type) const
 {
@@ -197,7 +197,7 @@ QVariant ResultsModel::GetElement( //WIP: Für einen Column Type, welche werden 
                     )
                 );
             case ColumnType::RAD_HE3:
-                return 0.00000002*( //WIP: in physical properties!
+                return 0.00000002*( //(todo): in physical properties!
                         results.measured_concentrations.at(0).at(                    
                         static_cast<GasType>(0)).value
                         - results.model_concentrations.at(0).at(
@@ -327,7 +327,7 @@ double ResultsModel::GetResidualForGas(const FitResults& results,
     GasType gas = GetGasFromIndex(gas_index);
     assert(results.residuals.size() == unsigned(results.residual_gases.size()));
     for (unsigned i = 0; i < results.residuals.size(); ++i)
-        if (results.residual_gases[i] == gas) //WIP: Wofür brauche ich die Prüfung und brauche ich sie auch für DNe?
+        if (results.residual_gases[i] == gas) //(note) Reihenfolge residuals entspricht nicht unbedingt gasen
             return results.residuals[i];
     return std::numeric_limits<double>::quiet_NaN();
 }
@@ -335,7 +335,6 @@ double ResultsModel::GetResidualForGas(const FitResults& results,
 
 double ResultsModel::GetDeltaNeon(const FitResults& results) const
 {
-    //WIP: Prüfen ob es Neon gibt?
     return 
         (
             results.measured_concentrations.at(0).at(static_cast<GasType>(1)).value
