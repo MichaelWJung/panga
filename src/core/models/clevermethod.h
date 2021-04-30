@@ -98,7 +98,7 @@ public:
 
     static const std::string NAME;
     
-    std::string GetCEqMethodName() const; //WIP: Verwendet?
+    std::string GetCEqMethodName() const;
 
 private:
     //! Volumen-Anteil von Xe in trockener Luft.

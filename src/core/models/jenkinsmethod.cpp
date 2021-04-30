@@ -69,7 +69,7 @@ void JenkinsMethod::CalculateDerivatives(
     GasType gas_for_calculations = gas != Gas::HE3 ? gas : Gas::HE;
     
     const double exponential =
-            CalcJenkinsExpFunction(x->T(), x->S(), gas_for_calculations) * PhysicalProperties::GetMolarVolume(gas) / 1000.;
+            CalcJenkinsExpFunction(x->T(), x->S(), gas_for_calculations) * PhysicalProperties::GetMolarVolume(gas_for_calculations) / 1000.;
 
     DERIVATIVE_LOOP(parameter, derivative, derivatives)
     {
@@ -176,7 +176,7 @@ double JenkinsMethod::CalculateConcentration(double p, double S, double T, GasTy
             CalcJenkinsExpFunction(T,
                                  S,
                                  gas != Gas::HE3 ? gas : Gas::HE) * 
-            PhysicalProperties::GetMolarVolume(gas) / 1000. * //Umrechnung von mol/kg nach ccSTP/g
+            PhysicalProperties::GetMolarVolume(gas != Gas::HE3 ? gas : Gas::HE) / 1000. * //Umrechnung von mol/kg nach ccSTP/g
             p_dry / (1 - p_w);
 
     if (gas == Gas::HE3)

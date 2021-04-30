@@ -86,13 +86,13 @@ BOOST_AUTO_TEST_CASE(ConcentrationsAndDerivatives)
 
     BOOST_CHECK_CLOSE(
                 model.CalculateEquilibriumConcentration(Gas::NE),
-                1.86998524534805e-07,
+                1.86998579479645e-07,
                 1e-6
                 );
 
     BOOST_CHECK_CLOSE(
                 model.CalculateConcentration(Gas::NE),
-                (a + b + c + T) * 1.86998524534805e-07,
+                (a + b + c + T) * 1.86998579479645e-07,
                 1e-6
                 );
 
@@ -102,9 +102,9 @@ BOOST_AUTO_TEST_CASE(ConcentrationsAndDerivatives)
     BOOST_CHECK_CLOSE(derivs[0]/*a*/, 0, 1e-14);
     BOOST_CHECK_CLOSE(derivs[1]/*b*/, 0, 1e-14);
     BOOST_CHECK_CLOSE(derivs[2]/*c*/, 0, 1e-14);
-    BOOST_CHECK_CLOSE(derivs[3]/*T*/, -1.39367393359350e-10, 1e-8);
-    BOOST_CHECK_CLOSE(derivs[4]/*S*/, -2.35966230954645e-10, 1e-8);
-    BOOST_CHECK_CLOSE(derivs[5]/*p*/,  4.58224843117053e-8 , 1e-8);
+    BOOST_CHECK_CLOSE(derivs[3]/*T*/, -1.39366806606821e-10, 1e-8);
+    BOOST_CHECK_CLOSE(derivs[4]/*S*/, -2.35971963482711e-10, 1e-8);
+    BOOST_CHECK_CLOSE(derivs[5]/*p*/,  4.58238131136642e-08 , 1e-8);
 
     derivs = model.CalculateDerivatives(Gas::HE);
 
@@ -112,19 +112,19 @@ BOOST_AUTO_TEST_CASE(ConcentrationsAndDerivatives)
     BOOST_CHECK_CLOSE(derivs[0]/*a*/, 1, 1e-14);
     BOOST_CHECK_CLOSE(derivs[1]/*b*/, 2, 1e-14);
     BOOST_CHECK_CLOSE(derivs[2]/*c*/, 3, 1e-14);
-    BOOST_CHECK_CLOSE(derivs[3]/*T*/,   42 * -1.39367393359350e-10, 1e-8);
-    BOOST_CHECK_CLOSE(derivs[4]/*S*/, 1e30 * -2.35966230954645e-10, 1e-8);
-    BOOST_CHECK_CLOSE(derivs[5]/*p*/, 1e30 *  4.58224843117053e-8 , 1e-8);
+    BOOST_CHECK_CLOSE(derivs[3]/*T*/,   42 * -1.39366806606821e-10, 1e-8);
+    BOOST_CHECK_CLOSE(derivs[4]/*S*/, 1e30 * -2.35971963482711e-10, 1e-8);
+    BOOST_CHECK_CLOSE(derivs[5]/*p*/, 1e30 *  4.58238131136642e-08 , 1e-8);
 
     BOOST_CHECK_CLOSE(
                 model.CalculateEquilibriumConcentration(Gas::XE),
-                9.61329873652310e-9,
+                9.60291390689642e-09,
                 1e-6
                 );
 
     BOOST_CHECK_CLOSE(
                 model.CalculateConcentration(Gas::XE),
-                (a + b + c + T) * 9.61329873652310e-9,
+                (a + b + c + T) * 9.60291390689642e-09,
                 1e-6
                 );
 
@@ -134,9 +134,9 @@ BOOST_AUTO_TEST_CASE(ConcentrationsAndDerivatives)
     BOOST_CHECK_CLOSE(derivs[0]/*a*/, 0, 1e-14);
     BOOST_CHECK_CLOSE(derivs[1]/*b*/, 0, 1e-14);
     BOOST_CHECK_CLOSE(derivs[2]/*c*/, 0, 1e-14);
-    BOOST_CHECK_CLOSE(derivs[3]/*T*/, -2.90137245940027e-10, 1e-2);
-    BOOST_CHECK_CLOSE(derivs[4]/*S*/, -6.92150669107957e-11, 1e-2);
-    BOOST_CHECK_CLOSE(derivs[5]/*p*/,  9.74048724844832e-9 , 1e-2);
+    BOOST_CHECK_CLOSE(derivs[3]/*T*/, -2.89836210587424e-10, 1e-2);
+    BOOST_CHECK_CLOSE(derivs[4]/*S*/, -6.90227958127318e-11, 1e-2);
+    BOOST_CHECK_CLOSE(derivs[5]/*p*/,  9.73024428135358e-09 , 1e-2);
 
     derivs = model.CalculateDerivatives(Gas::XE);
 
@@ -144,9 +144,9 @@ BOOST_AUTO_TEST_CASE(ConcentrationsAndDerivatives)
     BOOST_CHECK_CLOSE(derivs[0]/*a*/, 1, 1e-14);
     BOOST_CHECK_CLOSE(derivs[1]/*b*/, 2, 1e-14);
     BOOST_CHECK_CLOSE(derivs[2]/*c*/, 3, 1e-14);
-    BOOST_CHECK_CLOSE(derivs[3]/*T*/,   42 * -2.90137245940027e-10, 1e-2);
-    BOOST_CHECK_CLOSE(derivs[4]/*S*/, 1e30 * -6.92150669107957e-11, 1e-2);
-    BOOST_CHECK_CLOSE(derivs[5]/*p*/, 1e30 *  9.74048724844832e-9 , 1e-2);
+    BOOST_CHECK_CLOSE(derivs[3]/*T*/,   42 * -2.89836210587424e-10, 1e-2);
+    BOOST_CHECK_CLOSE(derivs[4]/*S*/, 1e30 * -6.90227958127318e-11, 1e-2);
+    BOOST_CHECK_CLOSE(derivs[5]/*p*/, 1e30 *  9.73024428135358e-09 , 1e-2);
 }
 
 BOOST_AUTO_TEST_CASE(SanityChecks)

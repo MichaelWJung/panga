@@ -25,8 +25,8 @@ class JenkinsMethodFactory : public CEqMethodFactory
 {
 public:
     ~JenkinsMethodFactory();
-    std::shared_ptr<CEqCalculationMethod> CreateCEqMethod( //WIP: Warum nicht direkt JenkinsMethod statt CEqCalculationMethod?
-        std::shared_ptr<ParameterManager> manager) const; //WIP: Problem: ParameterManager scheint hier noch zu fehlen als include
+    std::shared_ptr<CEqCalculationMethod> CreateCEqMethod( 
+        std::shared_ptr<ParameterManager> manager) const; 
     std::string GetCEqMethodName() const;
 };
 

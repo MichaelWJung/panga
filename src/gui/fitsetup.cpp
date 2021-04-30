@@ -382,9 +382,9 @@ void FitSetup::SetModel(QString name, QString ceqmethodname)
     CEqMethodFactory* ceqmethod_factory;
     try
     {
-        ceqmethod_factory = CEqMethodManager::Get().GetCEqMethodFactory(ceqmethodname.toStdString()); //WIP Test
+        ceqmethod_factory = CEqMethodManager::Get().GetCEqMethodFactory(ceqmethodname.toStdString());
     }
-    catch (CEqMethodManager::CEqMethodNotFoundError) //WIP noch anpassen?
+    catch (CEqMethodManager::CEqMethodNotFoundError)
     {
         ResetModel();
         return;

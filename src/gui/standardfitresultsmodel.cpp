@@ -35,7 +35,7 @@ StandardFitResultsModel::StandardFitResultsModel(
             gases_in_use,
             parent),
     results_(std::make_shared<ResultsVector>()),
-    column_types_(GetAvailableColumnTypes()), //WIP: -2 Alle
+    column_types_(GetAvailableColumnTypes()),
     sample_needs_monte_carlo_initialized_(false)
 {
 }
@@ -80,7 +80,7 @@ QVariant StandardFitResultsModel::headerData(
     return QVariant();
 }
 
-QVariant StandardFitResultsModel::data(const QModelIndex& index, int role) const //WIP: -1 Column-Types in index
+QVariant StandardFitResultsModel::data(const QModelIndex& index, int role) const 
 {
     if (index == QModelIndex()) return QVariant();
     try
@@ -89,7 +89,7 @@ QVariant StandardFitResultsModel::data(const QModelIndex& index, int role) const
         {
             case Qt::DisplayRole:
                 return GetElement(*results_->at(index.row()),
-                                  column_types_.at(index.column())); //WIP: 0 Verwendete Column-Types
+                                  column_types_.at(index.column()));
             case Qt::ForegroundRole:
                 return IsParameterInNormalRange(
                                *results_->at(index.row()),
@@ -135,7 +135,7 @@ StandardFitResultsModel::GetResultsVector() const
 
 bool StandardFitResultsModel::IsParameterInNormalRange(
         const FitResults& results,
-        const ExtendedColumnType& column_type) const //WIP: 0 Column Type
+        const ExtendedColumnType& column_type) const
 {
     unsigned i = column_type.second;
     switch (column_type.first)
@@ -171,7 +171,7 @@ bool StandardFitResultsModel::DoesSampleNeedMonteCarlo(
     {
         sample_needs_monte_carlo_.clear();
         sample_needs_monte_carlo_.resize(results_->size(), false);
-        for (const auto& column_type : column_types_) //WIP: -1 column_types
+        for (const auto& column_type : column_types_)
         {
             if (column_type.first != ColumnType::PARAMETER_ESTIMATE &&
                 column_type.first != ColumnType::PARAMETER_ESTIMATE_ERROR)
