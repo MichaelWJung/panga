@@ -23,43 +23,43 @@
 
 BOOST_AUTO_TEST_SUITE(PhysicalProperties_tests)
 
-BOOST_AUTO_TEST_CASE(CalcSaturationVaporPressure)
+BOOST_AUTO_TEST_CASE(CalcSaturationVaporPressure_Gill)
 {
     BOOST_CHECK_CLOSE(
-                PhysicalProperties::CalcSaturationVaporPressure(0),
+                PhysicalProperties::CalcSaturationVaporPressure_Gill(0),
                 6.0281407994095e-3,
                 1e-6
                 );
 
     BOOST_CHECK_CLOSE(
-                PhysicalProperties::CalcSaturationVaporPressure(10),
+                PhysicalProperties::CalcSaturationVaporPressure_Gill(10),
                 1.2106738021575e-2,
                 1e-6
                 );
 
     BOOST_CHECK_CLOSE(
-                PhysicalProperties::CalcSaturationVaporPressure(20),
+                PhysicalProperties::CalcSaturationVaporPressure_Gill(20),
                 2.3057715561949e-2,
                 1e-6
                 );
 }
 
-BOOST_AUTO_TEST_CASE(CalcSaturationVaporPressureDerivative)
+BOOST_AUTO_TEST_CASE(CalcSaturationVaporPressureDerivative_Gill)
 {
     BOOST_CHECK_CLOSE(
-                PhysicalProperties::CalcSaturationVaporPressureDerivative(0),
+                PhysicalProperties::CalcSaturationVaporPressureDerivative_Gill(0),
                 4.37679406606328e-04,
                 1e-2
                 );
 
     BOOST_CHECK_CLOSE(
-                PhysicalProperties::CalcSaturationVaporPressureDerivative(10),
+                PhysicalProperties::CalcSaturationVaporPressureDerivative_Gill(10),
                 8.10861794375839e-04,
                 1e-2
                 );
 
     BOOST_CHECK_CLOSE(
-                PhysicalProperties::CalcSaturationVaporPressureDerivative(20),
+                PhysicalProperties::CalcSaturationVaporPressureDerivative_Gill(20),
                 1.42896111610114e-03,
                 1e-2
                 );

@@ -16,8 +16,8 @@
 // along with Panga.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#ifndef WEISSMETHOD_H
-#define WEISSMETHOD_H
+#ifndef JENKINSMETHOD_H
+#define JENKINSMETHOD_H
 
 #include <memory>
 
@@ -26,13 +26,15 @@
 
 #define NOBLE_PARAMETER_COUNT 3
 #define NOBLE_PARAMETER_NAMES (p, S, T)
-#define NOBLE_CLASS_PREFIX Weiss
+#define NOBLE_CLASS_PREFIX Jenkins
 #define NOBLE_IS_CEQ_CALCULATION_METHOD
 #include "generatehelperclasses.h"
 
-//! Berechnung von Gleichgewichtskonzentrationen nach Weiss.
+//! Berechnung von Gleichgewichtskonzentrationen nach Jenkins.
 /*!
-  Aus Kipfer et al. 2002, Noble Gases in Lakes and Ground Waters:
+  Aus Jenkins et al., A determination of atmospheric helium, neon, argon, krypton, 
+  and xenon solubility concentrations in water and seawater. 
+  Marine Chemistry, 211:94–107, Apr. 2019. 
   \f[
     C^i_{eq}=exp\left(t^i_1+
                       t^i_2\cdot\frac{100}{T}+
@@ -41,12 +43,13 @@
                       S\cdot\left[s^i_1+
                                   s^i_2\cdot\frac{T}{100}+
                                   s^i_3\cdot\left(\frac{T}{100}\right)^2
-                                  \right]
+                                  \right]+
+                      S^2s^i_4
                       \right)\cdot
              \frac{p-e_w(T)}{(1-e_w(T))\cdot1000}
   \f]
 
-  \f$C^i_{eq}\f$: Gleichgewichtskonzentration von i (He, Ne, Ar, Kr) in ccSTP/g.\n
+  \f$C^i_{eq}\f$: Gleichgewichtskonzentration von i (He, Ne, Ar, Kr) in mol/kg.\n
   \f$e_w\f$: Sättigungsdampfdruck des Wassers.\n
   \f$p\f$: Luftdruck in atm.\n
   \f$T\f$: Temperatur in K.\n
@@ -54,14 +57,14 @@
   \f$t^i_j\f$: Temperaturkoeffizienten.\n
   \f$s^i_j\f$: Salinitätskoeffizienten.\n
   */
-class WeissMethod : public CEqCalculationMethod
+class JenkinsMethod : public CEqCalculationMethod
 {
     #include "generatehelpermethods.h"
 public:
 
-    WeissMethod(std::shared_ptr<ParameterManager> manager);
+    JenkinsMethod(std::shared_ptr<ParameterManager> manager);
 
-    ~WeissMethod() {}
+    ~JenkinsMethod() {}
 
     double CalculateConcentration(
         std::shared_ptr<ParameterAccessor> parameters,
@@ -89,33 +92,36 @@ public:
 
     static const std::string NAME;
     
-    std::string GetCEqMethodName() const; 
+    std::string GetCEqMethodName() const;
 
 private:
 
-    //! Berechnet die exp-Funktion aus der Weiss-Formel.
-    static double CalcWeissExpFunction(double t, double s, GasType gas);
+    //! Berechnet die exp-Funktion aus der Jenkins-Formel.
+    static double CalcJenkinsExpFunction(double t, double s, GasType gas);
 
-    //! Weiss coefficient.
+    //! Jenkins coefficient.
     static const std::vector<double> t1;
 
-    //! Weiss coefficient.
+    //! Jenkins coefficient.
     static const std::vector<double> t2;
 
-    //! Weiss coefficient.
+    //! Jenkins coefficient.
     static const std::vector<double> t3;
 
-    //! Weiss coefficient.
+    //! Jenkins coefficient.
     static const std::vector<double> t4;
 
-    //! Weiss coefficient.
+    //! Jenkins coefficient.
     static const std::vector<double> s1;
 
-    //! Weiss coefficient.
+    //! Jenkins coefficient.
     static const std::vector<double> s2;
 
-    //! Weiss coefficient.
+    //! Jenkins coefficient.
     static const std::vector<double> s3;
+
+    //! Jenkins coefficient.
+    static const std::vector<double> s4;
 };
 
-#endif // WEISSMETHOD_H
+#endif // JENKINSMETHOD_H

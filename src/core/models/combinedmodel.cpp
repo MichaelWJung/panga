@@ -20,18 +20,19 @@
 
 #include "combinedmodel.h"
 
-CombinedModel::CombinedModel(ModelFactory* factory) :
+CombinedModel::CombinedModel(ModelFactory* factory, CEqMethodFactory* ceqmethod_factory) :
     factory_(factory),
-    manager_(std::make_shared<ParameterManager>()),
+     ceqmethod_factory_(ceqmethod_factory),
+     manager_(std::make_shared<ParameterManager>()),
     model_  (factory->CreateModel(manager_)),
-    weiss_  (std::make_shared<WeissMethod> (manager_)),
-    clever_ (std::make_shared<CleverMethod>(manager_)),
-     model_accessor_ ( model_->GetParameterAccessor()),
-     weiss_accessor_ ( weiss_->GetParameterAccessor()),
-    clever_accessor_ (clever_->GetParameterAccessor()),
-     model_collector_( model_->GetDerivativeCollector()),
-     weiss_collector_( weiss_->GetDerivativeCollector()),
-    clever_collector_(clever_->GetDerivativeCollector()),
+     ceqmethod_ (ceqmethod_factory->CreateCEqMethod(manager_)),
+     clever_ (std::make_shared<CleverMethod>(manager_)),
+    model_accessor_ ( model_->GetParameterAccessor()),
+     ceqmethod_accessor_ (ceqmethod_->GetParameterAccessor()),
+     clever_accessor_ (clever_->GetParameterAccessor()),
+    model_collector_( model_->GetDerivativeCollector()),
+     ceqmethod_collector_( ceqmethod_->GetDerivativeCollector()),
+     clever_collector_(clever_->GetDerivativeCollector()),
     parameters_(Eigen::VectorXd::Zero(manager_->GetParametersInOrder().size())),
     derivatives_(),
     cached_concentrations_()
@@ -44,8 +45,8 @@ void CombinedModel::SetParameters(const Eigen::VectorXd &parameters)
         throw std::invalid_argument("The size of the supplied parameter vector and the number of "
                                     "parameters of this CombinedModel do not match.");
 
-     model_accessor_->SetVectorReference(parameters);
-     weiss_accessor_->SetVectorReference(parameters);
+    model_accessor_->SetVectorReference(parameters);
+    ceqmethod_accessor_->SetVectorReference(parameters);
     clever_accessor_->SetVectorReference(parameters);
 
     cached_concentrations_.clear();
@@ -56,15 +57,15 @@ void CombinedModel::SetupDerivatives(const std::vector<int> &indices)
 {
     derivatives_.setZero(indices.size());
      model_collector_->SetDerivativesAndResultsVector(derivatives_, indices);
-     weiss_collector_->SetDerivativesAndResultsVector(derivatives_, indices);
+     ceqmethod_collector_->SetDerivativesAndResultsVector(derivatives_, indices);
     clever_collector_->SetDerivativesAndResultsVector(derivatives_, indices);
 }
 
 double CombinedModel::CalculateEquilibriumConcentration(GasType gas)
 {
-    return gas == Gas::XE ?
+    return (gas == Gas::XE && ceqmethod_factory_->GetCEqMethodName() == "WeissClever") ?
                 clever_->CalculateConcentration(clever_accessor_, Gas::XE) :
-                weiss_ ->CalculateConcentration( weiss_accessor_, gas);
+                ceqmethod_ ->CalculateConcentration( ceqmethod_accessor_, gas); 
 }
 
 double CombinedModel::CalculateConcentration(GasType gas)
@@ -77,10 +78,10 @@ double CombinedModel::CalculateConcentration(GasType gas)
 
 const Eigen::RowVectorXd& CombinedModel::CalculateEquilibriumDerivatives(GasType gas)
 {
-    if (gas == Gas::XE)
+    if (gas == Gas::XE && ceqmethod_factory_->GetCEqMethodName() == "WeissClever")
         clever_->CalculateDerivatives(clever_accessor_, clever_collector_, Gas::XE);
     else
-        weiss_ ->CalculateDerivatives( weiss_accessor_,  weiss_collector_, gas);
+        ceqmethod_ ->CalculateDerivatives( ceqmethod_accessor_,  ceqmethod_collector_, gas);
 
     return derivatives_;
 }
@@ -138,7 +139,7 @@ unsigned CombinedModel::GetParameterIndex(const std::string &name) const
 
 std::shared_ptr<CombinedModel> CombinedModel::clone() const
 {
-    auto ret = std::make_shared<CombinedModel>(factory_);
+    auto ret = std::make_shared<CombinedModel>(factory_, ceqmethod_factory_);
     ret->SetApplyConstraints(AreConstraintsApplied());
     return ret;
 }
@@ -146,6 +147,11 @@ std::shared_ptr<CombinedModel> CombinedModel::clone() const
 std::string CombinedModel::GetExcessAirModelName() const
 {
     return  model_->GetModelName();
+}
+
+std::string CombinedModel::GetCEqMethodName() const 
+{
+    return  ceqmethod_->GetCEqMethodName();
 }
 
 void CombinedModel::SetApplyConstraints(bool apply)

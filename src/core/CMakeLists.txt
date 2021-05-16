@@ -32,9 +32,13 @@ set(core_SOURCES
     models/derivativecollector.cpp
     models/diffusioncoefficientinair.cpp
     models/modelmanager.cpp
+    models/ceqmethodmanager.cpp
     models/parametermanager.cpp
     models/physicalproperties.cpp
     models/weissmethod.cpp
+    models/weissmethodfactory.cpp
+    models/jenkinsmethod.cpp
+    models/jenkinsmethodfactory.cpp
     misc/rundata.cpp
  
     models/cemodel.cpp

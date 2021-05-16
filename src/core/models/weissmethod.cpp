@@ -24,6 +24,13 @@
 
 #include "weissmethod.h"
 
+const std::string WeissMethod::NAME = "WeissClever"; // Achtung, der Name wir in combinedmodel.cpp zum abrufen verwendet
+
+std::string WeissMethod::GetCEqMethodName() const
+{
+    return WeissMethod::NAME;
+}
+
 WeissMethod::WeissMethod(std::shared_ptr<ParameterManager> manager)
 {
     RegisterParameters(manager,
@@ -58,7 +65,7 @@ void WeissMethod::CalculateDerivatives(
     const double t_k = x->T() + 273.15;
 
     // Sättigungsdampfdruck.
-    const double p_w = PhysicalProperties::CalcSaturationVaporPressure(x->T());
+    const double p_w = PhysicalProperties::CalcSaturationVaporPressure_Dickson(x->T(), x->S());
 
     // (p - pw) / (1 - pw)
     const double frac = (x->p() - p_w) / (1. - p_w);
@@ -82,7 +89,13 @@ void WeissMethod::CalculateDerivatives(
             derivative = exponential * frac *
                           (s1[gas_for_calculations] +
                            s2[gas_for_calculations] * t_k +
-                           s3[gas_for_calculations] * t_k * t_k);
+                           s3[gas_for_calculations] * t_k * t_k)
+                           
+                           + //Verwendung von VaporPressure_Dickson mit Salinity Abhängigkeit:
+                           exponential * 
+                           (x->p() - 1.) / std::pow(1. - p_w, 2.) * //Ableitung von "frac"
+                           PhysicalProperties::CalcSaturationVaporPressureDerivedByS_Dickson(x->T(), x->S())
+                           ;
             break;
 
         case Weiss::T:
@@ -101,7 +114,8 @@ void WeissMethod::CalculateDerivatives(
                            +
 
                            (x->p() - 1.) / std::pow(1. - p_w, 2.) * //Ableitung von "frac"
-                           PhysicalProperties::CalcSaturationVaporPressureDerivative(x->T()));
+                           PhysicalProperties::CalcSaturationVaporPressureDerivedByT_Dickson(x->T(), x->S())
+                           );
             break;
 
         case Weiss::OTHER:
@@ -159,7 +173,7 @@ double WeissMethod::CalculateConcentration(double p, double S, double T, GasType
                                  " Weiss method.");
 
     // Sättigungsdampfdruck in atm.
-    const double p_w = PhysicalProperties::CalcSaturationVaporPressure(T);
+    const double p_w = PhysicalProperties::CalcSaturationVaporPressure_Dickson(T, S);
 
     // Partialdruck der trockenen Luft.
     const double p_dry = p - p_w;

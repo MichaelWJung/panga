@@ -25,6 +25,13 @@
 
 #include "clevermethod.h"
 
+const std::string CleverMethod::NAME = "Clever(Xe)"; 
+
+std::string CleverMethod::GetCEqMethodName() const
+{
+    return CleverMethod::NAME;
+}
+
 CleverMethod::CleverMethod(std::shared_ptr<ParameterManager> manager)
 {
     RegisterParameters(manager,
@@ -119,11 +126,10 @@ double CleverMethod::CalculateConcentration(double p, double S, double T, GasTyp
            // Molmasse von Wasser [g/mol]
            18.016 *
 
-           // Molvolumen aus Kipfer et al. 2002
-           22280.4 *
+           PhysicalProperties::GetMolarVolume(gas) *
 
             // Partialdruck der trockenen Luft                      * Xe-Anteil
-           (p - PhysicalProperties::CalcSaturationVaporPressure(T)) * z_ *
+           (p - PhysicalProperties::CalcSaturationVaporPressure_Dickson(T, S)) * z_ *
 
            PhysicalProperties::CalcWaterDensity(1., 0., T) /
            PhysicalProperties::CalcWaterDensity(1., S , T) *

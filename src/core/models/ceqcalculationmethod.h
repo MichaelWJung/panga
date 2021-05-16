@@ -37,6 +37,7 @@ class CEqCalculationMethod
 {
 
 public:
+    CEqCalculationMethod(){}
 
     //! Destruktor.
     virtual ~CEqCalculationMethod() {}
@@ -80,6 +81,8 @@ public:
         std::shared_ptr<DerivativeCollector> derivatives,
         GasType gas
         ) const = 0;
+
+    virtual std::string GetCEqMethodName() const = 0;
 };
 
 #endif // CEQCALCULATIONMETHOD_H

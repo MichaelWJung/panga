@@ -42,34 +42,34 @@ using ::testing::Mock;
 
 BOOST_AUTO_TEST_SUITE(StandardFitResultsModel_tests)
 
-BOOST_AUTO_TEST_CASE(columnCount_2FitParameters5Gases_Return49)
+BOOST_AUTO_TEST_CASE(columnCount_2FitParameters5Gases_Return55)
 {
     StandardFitResultsModel model(
         {},
         {"A", "B"},
         {Gas::HE, Gas::NE, Gas::AR, Gas::KR, Gas::XE});
 
-    BOOST_CHECK_EQUAL(model.columnCount(), 49);
+    BOOST_CHECK_EQUAL(model.columnCount(), 55);
 }
 
-BOOST_AUTO_TEST_CASE(columnCount_5FitParameters5Gases_Return64)
+BOOST_AUTO_TEST_CASE(columnCount_5FitParameters5Gases_Return70)
 {
     StandardFitResultsModel model(
         {},
         {"A", "B", "C", "D", "E"},
         {Gas::HE, Gas::NE, Gas::AR, Gas::KR, Gas::XE});
 
-    BOOST_CHECK_EQUAL(model.columnCount(), 64);
+    BOOST_CHECK_EQUAL(model.columnCount(), 70);
 }
 
-BOOST_AUTO_TEST_CASE(columnCount_2FitParameters3Gases_Return47)
+BOOST_AUTO_TEST_CASE(columnCount_2FitParameters3Gases_Return53)
 {
     StandardFitResultsModel model(
         {},
         {"A", "B"},
         {Gas::NE, Gas::AR, Gas::XE});
 
-    BOOST_CHECK_EQUAL(model.columnCount(), 47);
+    BOOST_CHECK_EQUAL(model.columnCount(), 53);
 }
 
 BOOST_AUTO_TEST_CASE(data_InvalidModelIndex_ReturnInvalidQVariant)

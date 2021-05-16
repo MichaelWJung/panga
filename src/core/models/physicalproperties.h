@@ -39,10 +39,19 @@ public:
       \param T_c Temperatur in °C.
       \return Sättigungsdampfdruck in atm.
       */
-    static double CalcSaturationVaporPressure(double T_c);
+    static double CalcSaturationVaporPressure_Gill(double T_c);
+    //! Berechnet den Sättigungsdampfdruck von Wasser.
+    /*!
+      Berechnung nach Dickson 2007, Guide to Best Practices for Ocean CO2 Measurements. 
+      Basierend auf einem Skript von Roberta Hamme (vpress Version 2.0 : 27 October 2012).
+      */
+    static double CalcSaturationVaporPressure_Dickson(double T_c, double S);
 
-    //! Berechnet die Ableitung des \ref CalcSaturationVaporPressure "Sättigungsdampfdrucks" von Wasser.
-    static double CalcSaturationVaporPressureDerivative(double T_c);
+    //! Berechnet die Ableitung des \ref CalcSaturationVaporPressure_Gill "Sättigungsdampfdrucks" von Wasser.
+    static double CalcSaturationVaporPressureDerivative_Gill(double T_c);
+    //! Berechnet die Ableitungen des \ref CalcSaturationVaporPressure_Dickson "Sättigungsdampfdrucks" von Wasser.
+    static double CalcSaturationVaporPressureDerivedByT_Dickson(double T_c, double S);
+    static double CalcSaturationVaporPressureDerivedByS_Dickson(double T_c, double S);
 
     //! Berechnet die Dichte von Wasser für die gegebenen Bedingungen.
     /*!
@@ -90,7 +99,7 @@ public:
       */
     static double ConvertToMole(double ccstp, GasType gas);
 
-    //! Wandelt Gaskonzentrationen im Wasser von mol/l in ccSTP/g um.
+    //! Wandelt Gaskonzentrationen im Wasser von ccSTP/g in mol/l um.
     /*!
       Da das Wasservolumen keine Stoffmenge angibt müssen Druck, Salinität und Temperatur mit angegeben werden.
       \param ccstp_g Konzentration in ccSTP/g.
@@ -129,6 +138,13 @@ public:
     
     //! Ableitung von Req nach S.
     static double CalcReqDerivedByS(double t, double s);
+
+    //! Molvolumina der Edelgase zur Umrechnung von Jenkins und Clever Löslichkeiten.
+    /*!
+     * based on Dymond and Smith, 1980
+     * in ccSTP/mol
+     */
+    static double GetMolarVolume(GasType gas);
 
 //     //! Gaskonstante in atm*l/(mol*K).
 //     static const double R;
@@ -184,6 +200,9 @@ private:
 
     //! Molvolumina der Edelgase, berechnet mit CalculateMolarVolumes.
     static const std::map<GasType, double> molar_volumes_;
+    
+    //! Molvolumina der Edelgase, basierend auf Dymond and Smith (1980).
+    static const std::map<GasType, double> molar_volumes_new;
 
     //! Volumenanteile der Edelgase in trockener Luft.
     static const std::map<GasType, double> dry_air_volume_fractions_;

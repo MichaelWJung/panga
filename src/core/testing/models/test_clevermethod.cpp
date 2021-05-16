@@ -73,17 +73,17 @@ BOOST_AUTO_TEST_CASE(CalculateConcentration)
     p = 1.01;
     S = 0;
     T = 20;
-    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::XE), 9.61329873652310e-9, 1e-6);
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::XE), 9.60291390689642e-09, 1e-6);
 
     p = .99;
     S = .001;
     T = 23;
-    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::XE), 8.61872441480665e-9, 1e-6);
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::XE), 8.60938089884059e-09, 1e-6);
 
     p = 4;
     S = 5;
     T = 6;
-    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::XE), 5.88642611001335e-8, 1e-6);
+    BOOST_CHECK_CLOSE(method.CalculateConcentration(accessor, Gas::XE), 5.88025826763174e-08, 1e-6);
 }
 
 BOOST_AUTO_TEST_CASE(CalculateDerivatives)

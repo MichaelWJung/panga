@@ -43,7 +43,13 @@ enum class ColumnType
     MODEL_CONCENTRATION_ERROR,
     MEASURED_CONCENTRATION,
     MEASURED_CONCENTRATION_ERROR,
-    CHI
+    CHI,
+    DELTA_NEON,
+    DELTA_NEON_ERROR,
+    RAD_HE,
+    RAD_HE_ERROR,
+    RAD_HE3,
+    RAD_HE3_ERROR,
 };
 
 typedef std::pair<ColumnType, unsigned> ExtendedColumnType;
@@ -73,6 +79,8 @@ protected:
                         const ExtendedColumnType& column_type) const;
     double GetResidualForGas(const FitResults& results,
                              unsigned gas_index) const;
+    double GetDeltaNeon(const FitResults& results) const;
+    double GetDeltaNeonError(const FitResults& results) const;             
     GasType GetGasFromIndex(unsigned i) const;
 
     //! \brief Durchläuft die Elemente der Oberen Dreiecksmatrix spaltenweise

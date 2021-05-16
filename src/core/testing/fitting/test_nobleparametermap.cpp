@@ -29,12 +29,13 @@
 #include "core/models/combinedmodelfactory.h"
 
 #include "testing/models/testmodel.h"
+#include "testing/models/testceqmethod.h"
 
 BOOST_AUTO_TEST_SUITE(NobleParameterMap_tests)
 
 BOOST_AUTO_TEST_CASE(Constructor)
 {
-    CombinedModelFactory factory(new TestFactory());
+    CombinedModelFactory factory(new TestFactory(), new TestCEqFactory());
     std::shared_ptr<CombinedModel> model(factory.CreateModel());
     std::vector<std::string> parameters(model->GetParameterNamesInOrder());
     std::map<std::string, unsigned> name_map;

@@ -80,7 +80,7 @@ QVariant StandardFitResultsModel::headerData(
     return QVariant();
 }
 
-QVariant StandardFitResultsModel::data(const QModelIndex& index, int role) const
+QVariant StandardFitResultsModel::data(const QModelIndex& index, int role) const 
 {
     if (index == QModelIndex()) return QVariant();
     try

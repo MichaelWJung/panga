@@ -32,10 +32,49 @@ const std::map<GasType, std::vector<double> > PhysicalProperties::virial_coeffic
     {Gas::XE, std::vector<double>({-130.00, -262.00, -87.0      })},
 };
 
+const double PhysicalProperties::molar_volume_ideal_gas_ = 22414.1;
+
+// Molare Volumen basierend auf CRC Handbook of Chemistry and Physics 76th Edition 1995-1996
+// werden nicht weiter verwendet
 const std::map<GasType, double> PhysicalProperties::molar_volumes_ =
     PhysicalProperties::CalculateMolarVolumes(PhysicalProperties::virial_coefficient_parameters_);
+std::map<GasType, double> PhysicalProperties::CalculateMolarVolumes(
+    const std::map<GasType, std::vector<double> > &a
+    )
+{
+    std::map<GasType, double> ret;
 
-const double PhysicalProperties::molar_volume_ideal_gas_ = 22414.1;
+    for (std::map<GasType, std::vector<double> >::const_iterator it = a.begin(); it != a.end(); ++it)
+    {
+        double b = 0;
+        unsigned i = 0;
+        for (std::vector<double>::const_iterator jt = it->second.begin();
+             jt != it->second.end();
+             ++jt, ++i)
+            b += *jt * std::pow(298.15 / 273.15 - 1, i);
+
+        ret[it->first] = b + molar_volume_ideal_gas_;
+    }
+
+    return ret;
+}
+
+// Molare Volumen basierend auf Dymond and Smith, 1980
+// calculated using the second Virial coefficient approximation
+// verwendet für die Umrechnung der Gleichgewichtskonzentrationen
+const std::map<GasType, double> PhysicalProperties::molar_volumes_new = { 
+    {Gas::HE, 22425.8703182828}, // Porcelli: 22436.4 
+    {Gas::NE, 22424.8703182828}, //           22421.7
+    {Gas::AR, 22392.5703182828}, //           22386.5
+    {Gas::KR, 22352.8703182828}, //           22351.2
+    {Gas::XE, 22256.9703182828}, //           22280.4
+};
+double PhysicalProperties::GetMolarVolume(GasType gas)
+{
+    return PhysicalProperties::molar_volumes_new.find(gas)->second;
+}
+
+
 
 //! \todo Eine Lösung finden für das doppelte definieren des Xenon-Werts.
 const std::map<GasType, double> PhysicalProperties::dry_air_volume_fractions_ = {
@@ -59,22 +98,74 @@ const std::map<GasType, std::pair<double, double>>
 // const double PhysicalProperties::R = 0.082058;
 const double PhysicalProperties::R = 8.3143;
 
+//Benson and Krause 1980; Kipfer et al. 2002
+//Coefficients for the calculation of 3He/4He
 const double PhysicalProperties::r1_ = -0.0299645;
 const double PhysicalProperties::r2_ = 19.8715;
 const double PhysicalProperties::r3_ = -1833.92;
 const double PhysicalProperties::r4_ = 0.000464;
 const double PhysicalProperties::r5_ = 1.384;
 
-double PhysicalProperties::CalcSaturationVaporPressure(double T_c)
+double PhysicalProperties::CalcSaturationVaporPressure_Gill(double T_c)
 {
     return std::exp( (c1_ + c2_ * T_c) / (1 + c3_ * T_c) )
             / 1013.25;
 }
-
-double PhysicalProperties::CalcSaturationVaporPressureDerivative(double T_c)
+double PhysicalProperties::CalcSaturationVaporPressure_Dickson(double T_c, double S)
 {
-    return CalcSaturationVaporPressure(T_c) *
+    //Calculate temperature in Kelvin and modified temperature for Chebyshev polynomial
+    double temp_K = T_c+273.15;
+    double temp_mod = 1-temp_K/647.096;
+
+    //Calculate value of Wagner polynomial
+    double Wagner = -7.85951783*temp_mod +1.84408259*pow(temp_mod, 1.5) -11.7866497*pow(temp_mod, 3) +22.6807411*pow(temp_mod, 3.5) -15.9618719*pow(temp_mod, 4) +1.80122502*pow(temp_mod, 7.5);
+
+    //Vapor pressure of pure water in kiloPascals and mm of Hg
+    double vapor_0sal_kPa = exp(Wagner * 647.096 / temp_K) * 22.064 * 1000;
+
+    //Correct vapor pressure for salinity
+    double molality = 31.998 * S /(1e3-1.005*S);
+    double osmotic_coef = 0.90799 -0.08992*(0.5*molality) +0.18458*pow(0.5*molality,2) -0.07395*pow(0.5*molality,3) -0.00221*pow(0.5*molality,4);
+    double vapor_press_kPa = vapor_0sal_kPa * exp(-0.018 * osmotic_coef * molality);
+
+    //Convert to atm
+    double vapor_press_atm = vapor_press_kPa/101.32501;
+
+    // Comparison:
+    // double oldpressure = CalcSaturationVaporPressure(T_c);
+    // printf("%.20g\n", vapor_press_atm);
+    // printf("%.20g\n", oldpressure);
+
+    return vapor_press_atm;
+}
+
+double PhysicalProperties::CalcSaturationVaporPressureDerivative_Gill(double T_c)
+{
+    return CalcSaturationVaporPressure_Gill(T_c) *
             (c2_ - c1_ * c3_) / std::pow(1 + c3_ * T_c, 2.);
+}
+double PhysicalProperties::CalcSaturationVaporPressureDerivedByT_Dickson(double T_c, double S)
+{
+    //Calculate temperature in Kelvin and modified temperature for Chebyshev polynomial
+    double temp_K = T_c+273.15;
+    double temp_mod = 1-temp_K/647.096;
+
+    //Calculate value of Wagner polynomial
+    double Wagner = -7.85951783*temp_mod +1.84408259*pow(temp_mod, 1.5) -11.7866497*pow(temp_mod, 3) +22.6807411*pow(temp_mod, 3.5) -15.9618719*pow(temp_mod, 4) +1.80122502*pow(temp_mod, 7.5);
+    double WagnerDerivedByTmod = -7.85951783+ 1.5* 1.84408259*pow(temp_mod, 0.5) - 3* 11.7866497*pow(temp_mod, 2) + 3.5* 22.6807411*pow(temp_mod, 2.5) - 4* 15.9618719*pow(temp_mod, 3) + 7.5* 1.80122502*pow(temp_mod, 6.5);
+    double WagnerDerivedByT = - 1/647.096 * WagnerDerivedByTmod;
+    return CalcSaturationVaporPressure_Dickson(T_c, S)* (WagnerDerivedByT * 647.096 / temp_K - Wagner * 647.096 / pow(temp_K,2));
+}
+double PhysicalProperties::CalcSaturationVaporPressureDerivedByS_Dickson(double T_c, double S)
+{
+    //Correct vapor pressure for salinity
+    double molality = 31.998 * S /(1e3 - 1.005*S);
+    double molality_DerivedByS = 31.998 /(1e3 - 1.005*S) + 31.998 * S / pow(1e3 - 1.005*S, 2) * 1.005;
+    double osmotic_coef = 0.90799 -0.08992*(0.5*molality) +0.18458*pow(0.5*molality,2) -0.07395*pow(0.5*molality,3) -0.00221*pow(0.5*molality,4);
+    double osmotic_coef_DerivedByMolality = -0.08992*(0.5) + 2*0.5* 0.18458*pow(0.5*molality,1) - 3*0.5* 0.07395*pow(0.5*molality,2) - 4*0.5* 0.00221*pow(0.5*molality,3);
+    double osmotic_coef_DerivedByS = molality_DerivedByS * osmotic_coef_DerivedByMolality;
+
+    return CalcSaturationVaporPressure_Dickson(T_c, S)* (-0.018 * (osmotic_coef_DerivedByS * molality + osmotic_coef * molality_DerivedByS ));
 }
 
 double PhysicalProperties::CalcWaterDensity(double p, double S, double T_c)
@@ -133,36 +224,17 @@ double PhysicalProperties::CalcXeSaltingCoefficient(double T_c)
     return -0.4431009868e2 + 0.218772e4 / T_k + 0.65527e1 * std::log(T_k);
 }
 
-double PhysicalProperties::ConvertToMole(double ccstp, GasType gas)
+double PhysicalProperties::ConvertToMole(double ccstp, GasType gas) //Wird nicht weiter verwendet
 {
     return ccstp / molar_volumes_.find(gas)->second;
 }
 
 double PhysicalProperties::ConvertToMolePerLiter(double ccstp_g, double p, double S, double T_c, GasType gas)
 {
-    return ccstp_g * CalcWaterDensity(p, S, T_c) / molar_volumes_.find(gas)->second;
+    return ccstp_g * CalcWaterDensity(p, S, T_c) / molar_volumes_.find(gas)->second; //Wird nicht weiter verwendet
 }
 
-std::map<GasType, double> PhysicalProperties::CalculateMolarVolumes(
-    const std::map<GasType, std::vector<double> > &a
-    )
-{
-    std::map<GasType, double> ret;
 
-    for (std::map<GasType, std::vector<double> >::const_iterator it = a.begin(); it != a.end(); ++it)
-    {
-        double b = 0;
-        unsigned i = 0;
-        for (std::vector<double>::const_iterator jt = it->second.begin();
-             jt != it->second.end();
-             ++jt, ++i)
-            b += *jt * std::pow(298.15 / 273.15 - 1, i);
-
-        ret[it->first] = b + molar_volume_ideal_gas_;
-    }
-
-    return ret;
-}
 
 double PhysicalProperties::GetDryAirVolumeFraction(GasType gas)
 {
@@ -219,7 +291,7 @@ double PhysicalProperties::CalcReqDerivedByT(double t, double s)
 {
     const double t_k = t + 273.15;
     const double r_eq = CalcReq(t, s);
-    return -r_eq * (1 + r4_ * s) * (2 * r3_ / (t_k*t_k*t_k) - r2_ / (t_k*t_k));
+    return r_eq * (1 + r4_ * s) * (2 * r3_ / (t_k*t_k*t_k) + r2_ / (t_k*t_k));
 }
 
 double PhysicalProperties::CalcReqDerivedByS(double t, double s)

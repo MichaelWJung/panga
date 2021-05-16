@@ -16,25 +16,18 @@
 // along with Panga.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#include <QApplication>
-#include <QLocale>
-#include <QTextCodec>
+#ifndef JENKINSMETHODFACTORY_H
+#define JENKINSMETHODFACTORY_H
 
-#include <iostream>
+#include "ceqmethodfactory.h"
 
-#include "mainwindow.h"
-// #include "../core/testing/models/manualtest_models.cpp"
+class JenkinsMethodFactory : public CEqMethodFactory
+{
+public:
+    ~JenkinsMethodFactory();
+    std::shared_ptr<CEqCalculationMethod> CreateCEqMethod( 
+        std::shared_ptr<ParameterManager> manager) const; 
+    std::string GetCEqMethodName() const;
+};
 
-int main(int argc, char* argv[])
-{   
-    // manualtesting::test();
-    QApplication app(argc, argv);
-    std::locale::global(std::locale::classic());
-    QLocale::setDefault(QLocale::c());
-    MainWindow* main_window = new MainWindow();
-    main_window->show();
-    int ret = app.exec();
-    delete main_window;
-    return ret;
-}
-
+#endif // JENKINSMETHODFACTORY_H
